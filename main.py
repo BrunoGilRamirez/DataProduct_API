@@ -107,7 +107,7 @@ async def specs():
     pass
 
 @wdm.get("/view/product_and_specs_by_id/{item_id}")
-async def specs_by_item_id(item_id: str):
+async def specs_by_item_id(request: Request,item_id: str):
     product = select_products_by_id(session, item_id)
     specs = select_specs_by_item_id(session, item_id)
     print(f"\nspecs: {specs}")
