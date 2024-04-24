@@ -1,0 +1,18 @@
+<table>
+    <thead>
+        <tr>
+            <th>Main Category</th>
+            <th>All Categories</th>
+            <th>Root Category</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in data %}
+        <tr>
+            <td>{{ item.main_category }}</td>
+            <td>{{ item.all_categories }}</td>
+            <td>{{ item.root_cat }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

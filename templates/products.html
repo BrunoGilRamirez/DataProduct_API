@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product List</title>
+    <style>
+        .product {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .product img {
+            width: 100px;
+            height: 100px;
+            margin-right: 20px;
+        }
+        .product-info {
+            flex-grow: 1;
+        }
+        .product-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .product-description {
+            margin-bottom: 5px;
+        }
+        .product-link {
+            color: blue;
+        }
+        .product-link a {
+            text-decoration: none;
+            color: blue;
+        }
+        .product-package {
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Product List</h1>
+    <ul>
+        {% for product in products %}
+        <li>
+            <div class="product">
+                <img src="{{ product.img }}" alt="{{ product.name }}">
+                <div class="product-info">
+                    <div class="product-name">Nombre del producto: {{ product.name }}</div>
+                    <div class="product-description">Descripción del producto: {{ product.itm_description }}</div>
+                    <div class="product-categories">Categorías: {{ product.path }}</div>
+                    <div class="product-link">
+                        <a href="{{ product.datasheet_link }}">Datasheet</a>
+                    </div>
+                    <div class="product-package">Número de elementos por paquete: {{ product.itms_val_in_pkg }}</div>
+                </div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Details</title>
+</head>
+<body>
+    <div>
+        <h1>{{ product.name }}</h1>
+        <p>Category: {{ product.category }}</p>
+        <p>ITMS Value in Package: {{ product.itms_val_in_pkg }}</p>
+        <p>Path: {{ product.path }}</p>
+        <p>Item Description: {{ product.itm_description }}</p>
+        <p>Item ID: {{ product.item_id }}</p>
+        <p><a href="{{ product.datasheet_link }}">Datasheet</a></p>
+        <img src="{{ product.img }}" alt="Product Image">
+    </div>
+    
+</body>
+</html>

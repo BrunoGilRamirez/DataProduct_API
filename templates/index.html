@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Endpoints</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: #ffff;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+            background-color: #ffff;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .table_div {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>API Endpoints</h1>
+    <div class="table_div">
+        <table>
+            <tr>
+                <th>Endpoint</th>
+                <th>Description</th>
+                <th>Ejemplo de uso</th> <!-- New column -->
+            </tr>
+            {% for endpoint in endpoints %}
+            <tr>
+                <td><a href="{{ endpoint[0] }}">{{ endpoint[0] }}</a></td>
+                <td>{{ endpoint[1] }}</td>
+                {% if endpoint[0] != "/categories" and endpoint[0] != "/specs_by_item_id/2674530000" and endpoint[0] != '/products_by_list_of_products/?ids=["0101700000","0103300000","0105100000","0105260000","0105620000","0105920000","0106020000","0107160000","0107260000","0110060000","0110080000"]' %}
+                    <td><a href="/view{{ endpoint[0] }}">Ver ejemplo</a></td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

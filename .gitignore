@@ -1,0 +1,17 @@
+.db_admin
+__pycache__
+*.env
+.env.*
+env.*
+.venv
+/db
+db_backup_.sql
+.dockerignore
+compose.production_copy.yaml
+.hintrc
+temp
+main.dev.py
+.vscode
+compose.dev.yaml
+compose.stage.yaml
+main_dev.py

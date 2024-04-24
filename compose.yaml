@@ -1,0 +1,21 @@
+services:
+  server:
+    build:
+      context: .
+    command: sh -c "uvicorn main:wdm --host 0.0.0.0 --port 8000"
+    ports:
+      - 8000:8000
+    volumes:
+      - API_data:/app
+    environment:
+      env_file: .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    
+    
+volumes:
+  API_data:
+
+
+
