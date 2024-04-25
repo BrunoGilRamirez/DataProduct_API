@@ -4,9 +4,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from DB_Operations import *
 from session_management import get_session
-from fastapi.middleware.wsgi import WSGIMiddleware
-from flask import Flask, request, render_template
 import pandas as pd
+from fastapi import Depends,Request
 import os
 from access.extras import *
 from access.schemas import *
@@ -14,7 +13,7 @@ from access.crud import *
 from access.schemas import *
 #---------------------General settings---------------------
 #this is to get the session from the .env file
-session = get_session('.env',remote_hosting=True)
+session = get_session('.env')
 list_endpoints = [("/products", "Get all products id"), 
             ("/product_by_id/2674530000", "Get a product by its id"), 
             ("/product_by_name/s2c 2.5", "Get a product by its name"), 
