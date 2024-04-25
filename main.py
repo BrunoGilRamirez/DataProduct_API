@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse,HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from DB_Operations import *
+from products.DB_Operations import *
 from session_management import get_session
 import pandas as pd
 from fastapi import Depends,Request
