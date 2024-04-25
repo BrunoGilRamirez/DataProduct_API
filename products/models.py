@@ -1,7 +1,7 @@
 from products import origin_models
 
 
-class treeOfCategories(origin_models.TreeOfCategories):
+class Categories(origin_models.TreeOfCategories_model):
     def __init__(self, id: str, all_categories: str, root_cat: str, subcategories: str, main_category: str):
         self.id = id
         self.all_categories = all_categories
@@ -19,7 +19,7 @@ class treeOfCategories(origin_models.TreeOfCategories):
     def __bool__(self):
         return bool(self.id)
     def __copy__(self):
-        return treeOfCategories(self.id, self.all_categories, self.root_cat, self.subcategories, self.main_category)
+        return Categories(self.id, self.all_categories, self.root_cat, self.subcategories, self.main_category)
     def __getitem__(self, item):
         if item in self.__dict__:
             return self.__dict__[item]
@@ -56,7 +56,7 @@ class treeOfCategories(origin_models.TreeOfCategories):
 
 
 
-class typesSpecs(origin_models.TypesSpecs):
+class TypesSpecs(origin_models.TypesSpecs_model):
     def __init__(self, T_id: int, types_specs: str):
         self.T_id = T_id
         self.types_specs = types_specs
@@ -69,7 +69,7 @@ class typesSpecs(origin_models.TypesSpecs):
     def __hash__(self):
         return hash(self.T_id)
     def __copy__(self):
-        return typesSpecs(self.T_id, self.types_specs)
+        return TypesSpecs(self.T_id, self.types_specs)
     def __getitem__(self, item):
         if item in self.__dict__:
             return self.__dict__[item]
@@ -85,7 +85,7 @@ class typesSpecs(origin_models.TypesSpecs):
     def __len__(self):
         return len(self.__dict__)
 
-class products(origin_models.Products):
+class Products(origin_models.Products_model):
     def __init__(self, item_id: str, name: str, itm_description: str, category: str, datasheet_link: str, itms_val_in_pkg: str, img: str, path: str):
         self.item_id = item_id
         self.name = name
@@ -106,7 +106,7 @@ class products(origin_models.Products):
     def __bool__(self):
         return bool(self.item_id)
     def __copy__(self):
-        return products(self.item_id, self.name, self.itm_description, self.category, self.datasheet_link, self.itms_val_in_pkg, self.img, self.path)
+        return Products(self.item_id, self.name, self.itm_description, self.category, self.datasheet_link, self.itms_val_in_pkg, self.img, self.path)
     def __getitem__(self, item):
         if item in self.__dict__:
             return self.__dict__[item]
@@ -139,7 +139,7 @@ class products(origin_models.Products):
     def __call__(self, *args, **kwargs):
         return self.__dict__
 
-class specs(origin_models.Specs):
+class Specs(origin_models.Specs_model):
     def __init__(self, id: int, item_id: str, name: str, value: str, type: str):
         self.id = id
         self.item_id = item_id
@@ -157,7 +157,7 @@ class specs(origin_models.Specs):
     def __bool__(self):
         return bool(self.id)
     def __copy__(self):
-        return specs(self.id, self.item_id, self.name, self.value, self.type)
+        return Specs(self.id, self.item_id, self.name, self.value, self.type)
     def __getitem__(self, item):
         if item in self.__dict__:
             return self.__dict__[item]

@@ -45,7 +45,7 @@ async def index(request: Request):
     return temp.TemplateResponse("index.html", {"request": request, "endpoints": list_endpoints})
 
 @wdm.get("/view/products", response_class=HTMLResponse)
-async def products(request: Request):
+async def Products(request: Request):
     products = select_n_products(session, 10, random=True)
     return temp.TemplateResponse("products.html", {"request": request, "products": products})
 
@@ -86,7 +86,7 @@ async def products_by_any_category(request: Request,category: str = '', main_cat
     return temp.TemplateResponse("products_by_any.html", {"request": request, "products": product, "category": category, "main_category": main_category, "root_category": root_category})
 
 @wdm.get("/view/categories")
-async def categories():
+async def TreeOfCategories():
     pass
 
 @wdm.get("/view/categories_by_root_cat/{name}")
@@ -102,14 +102,13 @@ async def categories_by_subcategories(root_category: str, subcategories: str):
     pass
 
 @wdm.get("/view/specs")
-async def specs():
+async def Specs():
     pass
 
 @wdm.get("/view/product_and_specs_by_id/{item_id}")
 async def specs_by_item_id(request: Request,item_id: str):
     product = select_products_by_id(session, item_id)
     specs = select_specs_by_item_id(session, item_id)
-    print(f"\nspecs: {specs}")
     return temp.TemplateResponse("product.html", {"request": request, "product": product, "specs": specs})
 
 #------------Endpoints_FastAPI--------------------
@@ -120,7 +119,6 @@ async def read_root():
 async def read_products(request: Request,flag: bool = Depends(get_current_user_API)):
     #lets start counting the time it takes to open and close the session
     if flag:
-        print("flag is true")
         products = select_products(session)
         return products
 @wdm.get("/product_by_id/{product_id}") 
@@ -137,19 +135,16 @@ async def read_products_by_name(request: Request,product_name: str, flag: bool =
 async def read_products_by_root_category(request: Request,category: str, flag: bool = Depends(get_current_user_API)):
     if flag:
         product = select_products_by_root_category(session, category)
-        print (f"number of products: {len(product)}")
         return product
 @wdm.get("/products_by_main_category/{category}")
 async def read_products_by_main_category(request: Request,category: str, flag: bool = Depends(get_current_user_API)):
     if flag:
-        print(f'category: {category}')
         product = select_products_by_main_category(session, category)
         return product
 @wdm.get("/products_by_subcategories/")
 async def read_products_by_subcategories(request: Request,category: str, flag: bool = Depends(get_current_user_API)):
     if flag:   
         category=category.replace('/','+')
-        print(f'category: {category}')
         product = select_products_by_subcategories(session, category)
         return product
 @wdm.get("/products_by_any_category/")
@@ -258,7 +253,6 @@ async def read_products_with_specs_to_excel(request: Request,list_of_products: s
         if list_of_products:
             list_of_products = eval(list_of_products)
             products = select_all_collumns_join_products_and_specs(session, list_of_products)
-            print(f"products: {products[0]}")
             #sort the products by the list of products
         products = [dict(product) for product in products]
         df = pd.DataFrame.from_records(products)

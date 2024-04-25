@@ -7,7 +7,7 @@ from sqlalchemy.orm.base import Mapped
 Base = declarative_base()
 
 
-class TreeOfCategories(Base):
+class TreeOfCategories_model(Base):
     __tablename__ = 'tree_of_categories'
     __table_args__ = (
         PrimaryKeyConstraint('id', name='tree_of_cathegories_pkey'),
@@ -21,10 +21,10 @@ class TreeOfCategories(Base):
     subcategories = mapped_column(Text)
     main_category = mapped_column(Text)
 
-    products: Mapped[List['Products']] = relationship('Products', uselist=True, back_populates='tree_of_categories')
+    products: Mapped[List['Products_model']] = relationship('Products_model', uselist=True, back_populates='tree_of_categories')
 
 
-class TypesSpecs(Base):
+class TypesSpecs_model(Base):
     __tablename__ = 'types_specs'
     __table_args__ = (
         PrimaryKeyConstraint('T_id', 'types_specs', name='types_specs_pkey'),
@@ -35,10 +35,10 @@ class TypesSpecs(Base):
     T_id = mapped_column(BigInteger, nullable=False)
     types_specs = mapped_column(Text, nullable=False)
 
-    specs: Mapped[List['Specs']] = relationship('Specs', uselist=True, back_populates='types_specs')
+    specs: Mapped[List['Specs_model']] = relationship('Specs_model', uselist=True, back_populates='types_specs')
 
 
-class Products(Base):
+class Products_model(Base):
     __tablename__ = 'products'
     __table_args__ = (
         ForeignKeyConstraint(['category'], ['tree_of_categories.id'], ondelete='CASCADE', onupdate='CASCADE', deferrable=True, initially='DEFERRED', name='Product_category_id_fk'),
@@ -56,12 +56,12 @@ class Products(Base):
     img = mapped_column(Text)
     path = mapped_column(Text)
 
-    tree_of_categories: Mapped[Optional['TreeOfCategories']] = relationship('TreeOfCategories', back_populates='products')
-    Visual_resources: Mapped[List['VisualResources']] = relationship('VisualResources', uselist=True, back_populates='item')
-    specs: Mapped[List['Specs']] = relationship('Specs', uselist=True, back_populates='item')
+    tree_of_categories: Mapped[Optional['TreeOfCategories_model']] = relationship('TreeOfCategories_model', back_populates='products')
+    Visual_resources: Mapped[List['VisualResources_model']] = relationship('VisualResources_model', uselist=True, back_populates='item')
+    specs: Mapped[List['Specs_model']] = relationship('Specs_model', uselist=True, back_populates='item')
 
 
-class VisualResources(Base):
+class VisualResources_model(Base):
     __tablename__ = 'Visual_resources'
     __table_args__ = (
         ForeignKeyConstraint(['item_id'], ['products.item_id'], ondelete='CASCADE', onupdate='CASCADE', deferrable=True, initially='DEFERRED', name='item_id_vr_fk'),
@@ -73,10 +73,10 @@ class VisualResources(Base):
     item_id = mapped_column(Text, nullable=False)
     link = mapped_column(Text, nullable=False)
 
-    item: Mapped['Products'] = relationship('Products', back_populates='Visual_resources')
+    item: Mapped['Products_model'] = relationship('Products_model', back_populates='Visual_resources')
 
 
-class Specs(Base):
+class Specs_model(Base):
     __tablename__ = 'specs'
     __table_args__ = (
         ForeignKeyConstraint(['item_id'], ['products.item_id'], ondelete='CASCADE', onupdate='CASCADE', deferrable=True, initially='DEFERRED', name='Product_key_fk'),
@@ -93,5 +93,5 @@ class Specs(Base):
     value = mapped_column(Text, nullable=False)
     type = mapped_column(Text, nullable=False)
 
-    item: Mapped['Products'] = relationship('Products', back_populates='specs')
-    types_specs: Mapped['TypesSpecs'] = relationship('TypesSpecs', back_populates='specs')
+    item: Mapped['Products_model'] = relationship('Products_model', back_populates='specs')
+    types_specs: Mapped['TypesSpecs_model'] = relationship('TypesSpecs_model', back_populates='specs')
