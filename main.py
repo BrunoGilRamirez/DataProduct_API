@@ -6,11 +6,11 @@ from products.DB_Operations import *
 from session_management import get_session
 import pandas as pd
 from fastapi import Depends,Request
-import os
 from access.extras import *
 from access.schemas import *
 from access.crud import *
 from access.schemas import *
+import os
 #---------------------General settings---------------------
 #this is to get the session from the .env file
 session = get_session('.env')
