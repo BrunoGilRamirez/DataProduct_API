@@ -3,59 +3,141 @@
 <head>
     <title>Product List</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #ef7800;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            margin-left: -20px;
+            margin-right: -20px;
+            margin-top: -20px;
+        }
+        .logo {
+            width: 100px;
+        }
+        .product-list {
+            background-color: #fff;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            align-items: center;
+            border-radius: 8px;
+        }
+        .product-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .product-list li {
+            margin-bottom: 20px;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #f2f2f2;            
+        }
+        .product-list ul p {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
         .product {
             display: flex;
             align-items: center;
             margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
         }
+
         .product img {
             width: 100px;
             height: 100px;
             margin-right: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
         .product-info {
             flex-grow: 1;
         }
+
         .product-name {
             font-weight: bold;
             margin-bottom: 5px;
+            color: #333;
         }
+
         .product-description {
             margin-bottom: 5px;
+            color: #555;
         }
-        .product-link {
-            color: blue;
-        }
+
         .product-link a {
             text-decoration: none;
-            color: blue;
+            color: #007bff;
         }
+
         .product-package {
             margin-top: 5px;
+            color: #777;
+        }
+        .content-module {
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            padding: 20px;
+            margin-top: -20px;
+            margin-left: -20px;
+            margin-right: -20px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
-    <h1>Product List</h1>
-    <h2>Products filtered by: </h2>
-    <h4>Sub-Categorias: {{sub}}</h4>
-    <ul>
-        {% for product in products %}
-        <li>
-            <div class="product">
-                <img src="{{ product.img }}" alt="{{ product.name }}">
-                <div class="product-info">
-                    <div class="product-name">Nombre del producto: {{ product.name }}</div>
-                    <div class="product-description">Descripción del producto: {{ product.itm_description }}</div>
-                    <div class="product-categories">Categorías: {{ product.path }}</div>
-                    <div class="product-link">
-                        <a href="{{ product.datasheet_link }}">Datasheet</a>
-                    </div>
-                    <div class="product-package">Número de elementos por paquete: {{ product.itms_val_in_pkg }}</div>
-                </div>
+    <div class="header">
+        <div>
+            <h1>Product List</h1>
+        </div>
+        <a href="/view"><img class="logo" src="/static/weidmueller_logo.svg" alt="Logo"></a>
+    </div>
+    <div class="product-list">
+        <div class="content-module">
+            <h2>Products filtered by:</h2>
+            <div class="filter-info">
+                <strong>Sub-Categorias:</strong> {{sub}} <br>
             </div>
-        </li>
-        {% endfor %}
-    </ul>
+        </div>
+    
+        <ul>
+            {% for product in products %}
+            <li>
+                <div class="product">
+                    <img src="{{ product.img }}" alt="{{ product.name }}">
+                    <div class="product-info">
+                        <div class="product-name">Nombre del producto: {{ product.name }}</div>
+                        <div class="product-description">Descripción del producto: {{ product.itm_description }}</div>
+                        <div class="product-categories">Categorías: {{ product.path }}</div>
+                        <div class="product-link">
+                            <a href="{{ product.datasheet_link }}">Datasheet</a>
+                        </div>
+                        <div class="product-package">Número de elementos por paquete: {{ product.itms_val_in_pkg }}</div>
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
 </body>
 </html>

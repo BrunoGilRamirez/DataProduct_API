@@ -2,29 +2,207 @@
 <html>
 <head>
     <title>Product Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #ef7800;
+        }
+
+        .logo {
+            width: 100px;
+        }
+
+        .form-logo {
+            width: 100px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            margin-left: -20px;
+            margin-right: -20px;
+            margin-top: -20px;
+        }
+
+        .header div {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .product-name {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            margin: -20px;
+        }
+
+        .product-container {
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .product-container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .product-container table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .product-container th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .product-container th {
+            background-color: #f2f2f2;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .product-image {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .product-image img {
+            max-width: 405px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-container a {
+            color: #ef7800;
+            text-decoration: none;
+        }
+
+        .product-container a:hover {
+            text-decoration: underline;
+        }
+
+        /* Estilos para las especificaciones */
+        .specifications {
+            margin-top: 30px;
+        }
+        .specifications h2 {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .spec-table caption {
+            font-weight: bold;
+            font-size: 1.2em;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            background-color: #f2f2f2;
+            color: #000000;
+        }
+
+        .spec-table th, .spec-table td {
+            padding: 8px;
+            border-bottom: 1px solid #ccc;
+            text-align: left;
+        }
+
+        .spec-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+    </style>
 </head>
 <body>
-    <div>
-        <h1>{{ product.name }}</h1>
-        <p>Category: {{ product.category }}</p>
-        <p>ITMS Value in Package: {{ product.itms_val_in_pkg }}</p>
-        <p>Path: {{ product.path }}</p>
-        <p>Item Description: {{ product.itm_description }}</p>
-        <p>Item ID: {{ product.item_id }}</p>
-        <p><a href="{{ product.datasheet_link }}">Datasheet</a></p>
-        <img src="{{ product.img }}" alt="Product Image">
+    <div class="header">
+        <div>
+            <h1>Product Details</h1>
+        </div>
+        <a href="/view"><img class="logo" src="/static/weidmueller_logo.svg" alt="Logo"></a>
     </div>
-    
-    <div>
-        <h2>Specifications</h2>
-        {% for type, list_spec in specs.items() %}
-            <p>{{ type }}</p>
-            <ul>
-                {% for spec in list_spec %}
-                    <li>{{ spec.name }}: {{ spec.value }}</li>
-                {% endfor %}
-            </ul>
-        {% endfor %}
+    <div class="product-container">
+        <div class="product-name">
+            <h1>{{ product.name }}</h1>
+        </div>
+        <div class="product-image">
+            <img src="{{ product.img }}" alt="Product Image">
+        </div>
+        <table>
+            <tr>
+                <th>Attribute</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>ID:</td>
+                <td>{{ product.item_id }}</td>
+            </tr>
+            <tr>
+                <td>Categoria:</td>
+                <td>{{ product.category }}</td>
+            </tr>
+            <tr>
+                <td>Numero de elementos por paquete:</td>
+                <td>{{ product.itms_val_in_pkg }}</td>
+            </tr>
+            <tr>
+                <td>Categorias:</td>
+                <td>{{ product.path }}</td>
+            </tr>
+            <tr>
+                <td>Descripcion:</td>
+                <td>{{ product.itm_description }}</td>
+            </tr>
+            <tr>
+                <td>Datasheet:</td>
+                <td><a href="{{ product.datasheet_link }}">View Datasheet</a></td>
+            </tr>
+        </table>
+        <div class="specifications">
+            <h2>Especificaciones</h2>
+            {% for type, list_spec in specs.items() %}
+                <table class="spec-table">
+                    <caption>{{ type }}</caption>
+                    {% for spec in list_spec %}
+                        <tr>
+                            <td>{{ spec.name }}</td>
+                            <td>{{ spec.value }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endfor %}
+        </div>
     </div>
 </body>
 </html>
