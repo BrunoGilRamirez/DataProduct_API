@@ -34,82 +34,17 @@ if not os.path.exists('temp'):
 #-----------------------FastAPI-----------------------
 #here we create an instance of FastAPI app. This is the main object of our application
 wdm = FastAPI()
-#wdm.mount('/beautiful_view', WSGIMiddleware(flwdm))
 #this is to serve the static files and the templates
 wdm.mount("/static", StaticFiles(directory="static"), name="static")
 temp = Jinja2Templates(directory="templates")
-#-----------------------view-----------------------
 
-@wdm.get("/view/", response_class=HTMLResponse)
-async def index(request: Request):
-    return temp.TemplateResponse("index.html", {"request": request, "endpoints": list_endpoints})
+#--------------------------- icons --------------------------------
+@wdm.get('/favicon.ico', include_in_schema=False)
+async def favicon():
+    file_name = "icons/favicon.ico"
+    file_path = os.path.join(wdm.root_path, "static", file_name)
+    return FileResponse(path=file_path, headers={"Content-Disposition": "attachment; filename=" + file_name})
 
-@wdm.get("/view/products", response_class=HTMLResponse)
-async def Products(request: Request):
-    products = select_n_products(session, 10, random=True)
-    return temp.TemplateResponse("products.html", {"request": request, "products": products})
-
-@wdm.get("/view/product_by_id/{product_id}", response_class=HTMLResponse)
-async def product_by_id(request: Request,product_id: str):
-    product = select_products_by_id(session, product_id)
-    return temp.TemplateResponse("product_basic.html", {"request": request, "product": product})
-
-@wdm.get("/view/product_by_name/{product_name}")
-async def product_by_name(request: Request,product_name: str):
-    product = select_products_by_name(session, product_name)
-    return temp.TemplateResponse("products.html", {"request": request, "products": product})
-
-@wdm.get("/view/products_by_root_category/{category}")
-async def products_by_root_category(request: Request,category: str):
-    product = select_products_by_root_category(session, category, n=10)
-    return temp.TemplateResponse("products_by_root.html", {"request": request, "products": product, "root": category})
-
-@wdm.get("/view/products_by_main_category/{category}")
-async def products_by_main_category(request: Request,category: str):
-    product = select_products_by_main_category(session, category)
-    return temp.TemplateResponse("products_by_main.html", {"request": request, "products": product, "main": category})
-
-@wdm.get("/view/products_by_subcategories/")
-async def products_by_subcategories(request: Request,category: str = ''):
-    category = request.query_params.get('category')
-    category = category.replace('/', '+')
-    product = select_products_by_subcategories(session, category)
-    return temp.TemplateResponse("products_by_sub.html", {"request": request, "products": product, "sub": category})
-
-@wdm.get("/view/products_by_any_category/")
-async def products_by_any_category(request: Request,category: str = '', main_category: str = '', root_category: str = ''):
-    category = request.query_params.get('category')
-    main_category = request.query_params.get('main_category')
-    root_category = request.query_params.get('root_category')
-    category = category.replace('/', '+')
-    product = select_products_by_any_category(session, category, main_category, root_category)
-    return temp.TemplateResponse("products_by_any.html", {"request": request, "products": product, "category": category, "main_category": main_category, "root_category": root_category})
-
-@wdm.get("/view/categories")
-async def TreeOfCategories():
-    pass
-
-@wdm.get("/view/categories_by_root_cat/{name}")
-async def categories_by_root_cat(name: str):
-    pass
-
-@wdm.get("/view/categories_by_main_category/{name}")
-async def categories_by_main_category(name: str):
-    pass
-
-@wdm.get("/view/categories_by_subcategories/{root_category}")
-async def categories_by_subcategories(root_category: str, subcategories: str):
-    pass
-
-@wdm.get("/view/specs")
-async def Specs():
-    pass
-
-@wdm.get("/view/product_and_specs_by_id/{item_id}")
-async def specs_by_item_id(request: Request,item_id: str):
-    product = select_products_by_id(session, item_id)
-    specs = select_specs_by_item_id(session, item_id)
-    return temp.TemplateResponse("product.html", {"request": request, "product": product, "specs": specs})
 
 #------------Endpoints_FastAPI--------------------
 @wdm.get("/")
@@ -125,6 +60,7 @@ async def read_products(request: Request,flag: bool = Depends(get_current_user_A
 async def read_products_by_id(request: Request,product_id: str, flag: bool = Depends(get_current_user_API)):
     if flag:
         product = select_products_by_id(session, product_id)
+
         return product
 @wdm.get("/product_by_name/{product_name}")
 async def read_products_by_name(request: Request,product_name: str, flag: bool = Depends(get_current_user_API)):
@@ -261,3 +197,75 @@ async def read_products_with_specs_to_excel(request: Request,list_of_products: s
         filename = f'products_with_specs{timestamp}.xlsx'
         df.to_excel(("temp/"+filename), index=False)
         return FileResponse(("temp/"+filename), filename=filename)
+
+#-----------------------view-----------------------
+@wdm.get("/view/", response_class=HTMLResponse, include_in_schema=False)
+async def index(request: Request):
+    return temp.TemplateResponse("index.html", {"request": request, "endpoints": list_endpoints})
+
+@wdm.get("/view/products", response_class=HTMLResponse, include_in_schema=False)
+async def Products(request: Request):
+    products = select_n_products(session, 10, random=True)
+    return temp.TemplateResponse("products.html", {"request": request, "products": products})
+
+@wdm.get("/view/product_by_id/{product_id}", response_class=HTMLResponse, include_in_schema=False)
+async def product_by_id(request: Request,product_id: str):
+    product = select_products_by_id(session, product_id)
+    return temp.TemplateResponse("product_basic.html", {"request": request, "product": product})
+
+@wdm.get("/view/product_by_name/{product_name}", response_class=HTMLResponse, include_in_schema=False)
+async def product_by_name(request: Request,product_name: str):
+    product = select_products_by_name(session, product_name)
+    return temp.TemplateResponse("products_by_name.html", {"request": request, "products": product, "name":product_name})
+
+@wdm.get("/view/products_by_root_category/{category}", response_class=HTMLResponse, include_in_schema=False)
+async def products_by_root_category(request: Request,category: str):
+    product = select_products_by_root_category(session, category, n=10)
+    return temp.TemplateResponse("products_by_root.html", {"request": request, "products": product, "root": category})
+
+@wdm.get("/view/products_by_main_category/{category}", response_class=HTMLResponse, include_in_schema=False)
+async def products_by_main_category(request: Request,category: str):
+    product = select_products_by_main_category(session, category)
+    return temp.TemplateResponse("products_by_main.html", {"request": request, "products": product, "main": category})
+
+@wdm.get("/view/products_by_subcategories/", response_class=HTMLResponse, include_in_schema=False)
+async def products_by_subcategories(request: Request,category: str = ''):
+    category = request.query_params.get('category')
+    category = category.replace('/', '+')
+    product = select_products_by_subcategories(session, category)
+    return temp.TemplateResponse("products_by_sub.html", {"request": request, "products": product, "sub": category})
+
+@wdm.get("/view/products_by_any_category/", response_class=HTMLResponse, include_in_schema=False)
+async def products_by_any_category(request: Request,category: str = '', main_category: str = '', root_category: str = ''):
+    category = request.query_params.get('category')
+    main_category = request.query_params.get('main_category')
+    root_category = request.query_params.get('root_category')
+    category = category.replace('/', '+')
+    product = select_products_by_any_category(session, category, main_category, root_category)
+    return temp.TemplateResponse("products_by_any.html", {"request": request, "products": product, "category": category, "main_category": main_category, "root_category": root_category})
+
+@wdm.get("/view/categories", response_class=HTMLResponse, include_in_schema=False)
+async def TreeOfCategories():
+    pass
+
+@wdm.get("/view/categories_by_root_cat/{name}", response_class=HTMLResponse, include_in_schema=False)
+async def categories_by_root_cat(name: str):
+    pass
+
+@wdm.get("/view/categories_by_main_category/{name}", response_class=HTMLResponse, include_in_schema=False)
+async def categories_by_main_category(name: str):
+    pass
+
+@wdm.get("/view/categories_by_subcategories/{root_category}", response_class=HTMLResponse, include_in_schema=False)
+async def categories_by_subcategories(root_category: str, subcategories: str):
+    pass
+
+@wdm.get("/view/specs")
+async def Specs():
+    pass
+
+@wdm.get("/view/product_and_specs_by_id/{item_id}", response_class=HTMLResponse, include_in_schema=False)
+async def specs_by_item_id(request: Request,item_id: str):
+    product = select_products_by_id(session, item_id)
+    specs = select_specs_by_item_id(session, item_id)
+    return temp.TemplateResponse("product.html", {"request": request, "product": product, "specs": specs})
