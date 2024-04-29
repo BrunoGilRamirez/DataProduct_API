@@ -25,6 +25,15 @@
         .logo {
             width: 100px;
         }
+        .product {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+        }
         .product-list {
             background-color: #fff;
             max-width: 800px;
@@ -50,15 +59,6 @@
             text-align: center;
         }
 
-        .product {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            background-color: #fff;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 20px;
-        }
 
         .product img {
             width: 100px;
@@ -67,7 +67,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        
+
         .product-info {
             flex-grow: 1;
         }
@@ -92,17 +92,6 @@
             margin-top: 5px;
             color: #777;
         }
-        .content-module {
-            background-color: #fff;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-            padding: 20px;
-            margin-top: -20px;
-            margin-left: -20px;
-            margin-right: -20px;
-            margin-bottom: 20px;
-        }
     </style>
 </head>
 <body>
@@ -116,28 +105,26 @@
         <div class="content-module">
             <h2>Productos filtrados por:</h2>
             <div class="filter-info">
-                <strong>Categoría Principal:</strong> {{main}} <br>
+                <strong>Productos con el nombre:</strong> {{name}} <br>
             </div>
         </div>
-        
-    
         <ul>
-            {% for product in products %}
             <li>
-                <div class="product">
-                    <img src="{{ product.img }}" alt="{{ product.name }}">
-                    <div class="product-info">
-                        <div class="product-name">Nombre del producto: {{ product.name }}</div>
-                        <div class="product-description">Descripción del producto: {{ product.itm_description }}</div>
-                        <div class="product-categories">Categorías: {{ product.path }}</div>
-                        <div class="product-link">
-                            <a href="{{ product.datasheet_link }}">Datasheet</a>
+                {% for product in products %}
+                    <div class="product">
+                        <img src="{{ product.img }}" alt="{{ product.name }}">
+                        <div class="product-list">
+                            <div class="product-name">Nombre del producto: {{ product.name }}</div>
+                            <div class="product-description"><strong>Descripción del producto:</strong> {{ product.itm_description }}</div>
+                            <div class="product-categories"><strong>Categorías:</strong> {{ product.path }}</div>
+                            <div class="product-link">
+                                <a href="{{ product.datasheet_link }}">Datasheet</a>
+                            </div>
+                            <div class="product-package"><strong>Número de elementos por paquete:</strong> {{ product.itms_val_in_pkg }}</div>
                         </div>
-                        <div class="product-package">Número de elementos por paquete: {{ product.itms_val_in_pkg }}</div>
                     </div>
-                </div>
+                {% endfor %}
             </li>
-            {% endfor %}
         </ul>
     </div>
 </body>

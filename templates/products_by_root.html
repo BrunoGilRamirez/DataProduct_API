@@ -108,35 +108,35 @@
 <body>
     <div class="header">
         <div>
-            <h1>Product List</h1>
+            <h1>Lista de Productos</h1>
         </div>
         <a href="/view"><img class="logo" src="/static/weidmueller_logo.svg" alt="Logo"></a>
     </div>
     <div class="product-list">
         <div class="content-module">
-            <h2>Products filtered by:</h2>
+            <h2>Productos filtrados por:</h2>
             <div class="filter-info">
-                <strong>Categoria raiz:</strong> {{root}} <br>
+                <strong>Categoría raíz:</strong> {{root}} <br>
             </div>
         </div>
     
         <ul>
-            {% for product in products %}
             <li>
-                <div class="product">
-                    <img src="{{ product.img }}" alt="{{ product.name }}">
-                    <div class="product-info">
-                        <div class="product-name">Nombre del producto: {{ product.name }}</div>
-                        <div class="product-description">Descripción del producto: {{ product.itm_description }}</div>
-                        <div class="product-categories">Categorías: {{ product.path }}</div>
-                        <div class="product-link">
-                            <a href="{{ product.datasheet_link }}">Datasheet</a>
+                {% for product in products %}
+                    <div class="product">
+                        <img src="{{ product.img }}" alt="{{ product.name }}">
+                        <div class="product-info">
+                            <div class="product-name">Nombre del producto: {{ product.name }}</div>
+                            <div class="product-description">Descripción del producto: {{ product.itm_description }}</div>
+                            <div class="product-categories">Categorías: {{ product.path }}</div>
+                            <div class="product-link">
+                                <a href="{{ product.datasheet_link }}">Datasheet</a>
+                            </div>
+                            <div class="product-package">Número de elementos por paquete: {{ product.itms_val_in_pkg }}</div>
                         </div>
-                        <div class="product-package">Número de elementos por paquete: {{ product.itms_val_in_pkg }}</div>
                     </div>
-                </div>
+                {% endfor %}
             </li>
-            {% endfor %}
         </ul>
     </div>
 </body>
