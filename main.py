@@ -10,6 +10,7 @@ from access.extras import *
 from access.schemas import *
 from access.crud import *
 from access.schemas import *
+from starlette.middleware.sessions import SessionMiddleware
 import os
 #---------------------General settings---------------------
 #this is to get the session from the .env file
@@ -36,6 +37,7 @@ if not os.path.exists('temp'):
 wdm = FastAPI()
 #this is to serve the static files and the templates
 wdm.mount("/static", StaticFiles(directory="static"), name="static")
+wdm.add_middleware(SessionMiddleware, secret_key=os.getenv('SECRET_KEY_sessions'), https_only=True)
 temp = Jinja2Templates(directory="templates")
 
 #--------------------------- icons --------------------------------
@@ -48,8 +50,15 @@ async def favicon():
 
 #------------Endpoints_FastAPI--------------------
 @wdm.get("/")
-async def read_root():
-    return list_endpoints
+async def read_root(request: Request, db: Session = Depends(get_db)):
+    token= request.session.get('token')
+    if token:
+        request_add_token(request, token)
+    flag = await get_current_user_view(request=request, session=db, raise_exception=False)
+    if flag:
+        return list_endpoints
+    else:
+        return RedirectResponse(url='/view/')
 @wdm.get("/products")
 async def read_products(request: Request,flag: bool = Depends(get_current_user_API)):
     #lets start counting the time it takes to open and close the session
@@ -199,51 +208,129 @@ async def read_products_with_specs_to_excel(request: Request,list_of_products: s
         return FileResponse(("temp/"+filename), filename=filename)
 
 #-----------------------view-----------------------
-@wdm.get("/view/", response_class=HTMLResponse, include_in_schema=False)
-async def index(request: Request):
-    return temp.TemplateResponse("index.html", {"request": request, "endpoints": list_endpoints})
+@wdm.get("/view/")
+@wdm.post("/view/")
+async def view(request: Request, db: Session = Depends(get_db)):
+    token = request.session.get('token')
+    if request.method == "POST":
+        form = await request.form()
+        token = form.get('token')
+        request.session['token'] = token
+    if request.method == "GET":
+        pass
+    request_add_token(request, token)
+    flag= await get_current_user_view(request=request, session=db, raise_exception=False)
+    print("flag: ", flag)
+    if flag:
+        return RedirectResponse(url='/view/home', status_code=status.HTTP_302_FOUND)
+    else:
+        try:
+            request.session.pop('token')
+        except:
+            pass
+        return temp.TemplateResponse("view.html", {"request": request})
+    
+@wdm.get("/view/home", response_class=HTMLResponse, include_in_schema=False)
+async def index(request: Request, db: Session = Depends(get_db)):
+    token = request.session.get('token')
+    if token:
+        request_add_token(request, token)
+        flag= await get_current_user_view(request=request, session=db, raise_exception=False)
+        if flag:
+            return temp.TemplateResponse("index.html", {"request": request, "endpoints": list_endpoints})
+    else: 
+        return RedirectResponse(url='/view/')
 
 @wdm.get("/view/products", response_class=HTMLResponse, include_in_schema=False)
-async def Products(request: Request):
-    products = select_n_products(session, 10, random=True)
-    return temp.TemplateResponse("products.html", {"request": request, "products": products})
+async def Products(request: Request, db: Session = Depends(get_db)):
+    token = request.session.get('token')
+    if token:
+        request_add_token(request, token)
+        flag= await get_current_user_view(request=request, session=db, raise_exception=False)
+        if flag:
+            products = select_n_products(session, 10, random=True)
+            return temp.TemplateResponse("products.html", {"request": request, "products": products})
+    else: 
+        return RedirectResponse(url='/view/')
 
 @wdm.get("/view/product_by_id/{product_id}", response_class=HTMLResponse, include_in_schema=False)
-async def product_by_id(request: Request,product_id: str):
-    product = select_products_by_id(session, product_id)
-    return temp.TemplateResponse("product_basic.html", {"request": request, "product": product})
+async def product_by_id(request: Request,product_id: str, db: Session = Depends(get_db)):
+    token = request.session.get('token')
+    if token:
+        request_add_token(request, token)
+        flag= await get_current_user_view(request=request, session=db, raise_exception=False)
+        if flag:
+            product = select_products_by_id(session, product_id)
+            return temp.TemplateResponse("product_basic.html", {"request": request, "product": product})
+    else: 
+        return RedirectResponse(url='/view/')
 
 @wdm.get("/view/product_by_name/{product_name}", response_class=HTMLResponse, include_in_schema=False)
-async def product_by_name(request: Request,product_name: str):
-    product = select_products_by_name(session, product_name)
-    return temp.TemplateResponse("products_by_name.html", {"request": request, "products": product, "name":product_name})
+async def product_by_name(request: Request,product_name: str, db: Session = Depends(get_db)):
+    token = request.session.get('token')
+    if token:
+        request_add_token(request, token)
+        flag= await get_current_user_view(request=request, session=db, raise_exception=False)
+        if flag:
+            product = select_products_by_name(session, product_name)
+            return temp.TemplateResponse("products_by_name.html", {"request": request, "products": product, "name":product_name})
+    else: 
+        return RedirectResponse(url='/view/')
 
 @wdm.get("/view/products_by_root_category/{category}", response_class=HTMLResponse, include_in_schema=False)
-async def products_by_root_category(request: Request,category: str):
-    product = select_products_by_root_category(session, category, n=10)
-    return temp.TemplateResponse("products_by_root.html", {"request": request, "products": product, "root": category})
+async def products_by_root_category(request: Request,category: str, db: Session = Depends(get_db)):
+    token = request.session.get('token')
+    if token:
+        request_add_token(request, token)
+        flag= await get_current_user_view(request=request, session=db, raise_exception=False)
+        if flag:
+            product = select_products_by_root_category(session, category, n=10)
+            return temp.TemplateResponse("products_by_root.html", {"request": request, "products": product, "root": category})
+    else: 
+        return RedirectResponse(url='/view/')
 
 @wdm.get("/view/products_by_main_category/{category}", response_class=HTMLResponse, include_in_schema=False)
-async def products_by_main_category(request: Request,category: str):
-    product = select_products_by_main_category(session, category)
-    return temp.TemplateResponse("products_by_main.html", {"request": request, "products": product, "main": category})
+async def products_by_main_category(request: Request,category: str, db: Session = Depends(get_db)):
+    token = request.session.get('token')
+    if token:
+        request_add_token(request, token)
+        flag= await get_current_user_view(request=request, session=db, raise_exception=False)
+        if flag:
+            product = select_products_by_main_category(session, category)
+            return temp.TemplateResponse("products_by_main.html", {"request": request, "products": product, "main": category})
+    else: 
+        return RedirectResponse(url='/view/')
 
 @wdm.get("/view/products_by_subcategories/", response_class=HTMLResponse, include_in_schema=False)
-async def products_by_subcategories(request: Request,category: str = ''):
-    category = request.query_params.get('category')
-    category = category.replace('/', '+')
-    product = select_products_by_subcategories(session, category)
-    return temp.TemplateResponse("products_by_sub.html", {"request": request, "products": product, "sub": category})
+async def products_by_subcategories(request: Request,category: str = '', db: Session = Depends(get_db)):
+    token = request.session.get('token')
+    if token:
+        request_add_token(request, token)
+        flag= await get_current_user_view(request=request, session=db, raise_exception=False)
+        if flag:
+            category = request.query_params.get('category')
+            category = category.replace('/', '+')
+            product = select_products_by_subcategories(session, category)
+            return temp.TemplateResponse("products_by_sub.html", {"request": request, "products": product, "sub": category})
+    else: 
+        return RedirectResponse(url='/view/')
 
 @wdm.get("/view/products_by_any_category/", response_class=HTMLResponse, include_in_schema=False)
-async def products_by_any_category(request: Request,category: str = '', main_category: str = '', root_category: str = ''):
-    category = request.query_params.get('category')
-    main_category = request.query_params.get('main_category')
-    root_category = request.query_params.get('root_category')
-    category = category.replace('/', '+')
-    product = select_products_by_any_category(session, category, main_category, root_category)
-    return temp.TemplateResponse("products_by_any.html", {"request": request, "products": product, "category": category, "main_category": main_category, "root_category": root_category})
-
+async def products_by_any_category(request: Request,category: str = '', main_category: str = '', root_category: str = '', db: Session = Depends(get_db)):
+    token = request.session.get('token')
+    if token:
+        request_add_token(request, token)
+        flag= await get_current_user_view(request=request, session=db, raise_exception=False)
+        if flag:
+            category = request.query_params.get('category')
+            main_category = request.query_params.get('main_category')
+            root_category = request.query_params.get('root_category')
+            category = category.replace('/', '+')
+            product = select_products_by_any_category(session, category, main_category, root_category)
+            return temp.TemplateResponse("products_by_any.html", {"request": request, "products": product, "category": category, "main_category": main_category, "root_category": root_category})
+    else: 
+        return RedirectResponse(url='/view/')
+    
 @wdm.get("/view/categories", response_class=HTMLResponse, include_in_schema=False)
 async def TreeOfCategories():
     pass
@@ -265,7 +352,14 @@ async def Specs():
     pass
 
 @wdm.get("/view/product_and_specs_by_id/{item_id}", response_class=HTMLResponse, include_in_schema=False)
-async def specs_by_item_id(request: Request,item_id: str):
-    product = select_products_by_id(session, item_id)
-    specs = select_specs_by_item_id(session, item_id)
-    return temp.TemplateResponse("product.html", {"request": request, "product": product, "specs": specs})
+async def specs_by_item_id(request: Request,item_id: str, db: Session = Depends(get_db)):
+    token = request.session.get('token')
+    if token:
+        request_add_token(request, token)
+        flag= await get_current_user_view(request=request, session=db, raise_exception=False)
+        if flag:
+            product = select_products_by_id(session, item_id)
+            specs = select_specs_by_item_id(session, item_id)
+            return temp.TemplateResponse("product.html", {"request": request, "product": product, "specs": specs})
+    else: 
+        return RedirectResponse(url='/view/')

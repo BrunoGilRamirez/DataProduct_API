@@ -2,10 +2,12 @@ from .schemas import *
 from jose import JWTError
 from passlib.context import CryptContext
 from datetime import datetime
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Request
 from .crud import *
+from starlette.datastructures import MutableHeaders
 from session_management import get_session
 from fastapi.security import OAuth2PasswordBearer
+import traceback
 import os
 
 #------------------------------------- cryptography -------------------------------------
@@ -16,7 +18,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES')
 cookie_path= os.getenv('path_cookie')
 scheme = os.getenv('cryp_scheme')
 pwd_context = CryptContext(schemes=[scheme], deprecated="auto") # bcrypt is the hashing algorithm used to hash the password
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="key")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="key",auto_error=False)
 
 #------------------------------------- session -------------------------------------
 
@@ -28,24 +30,66 @@ def get_db():
     finally:
         db.close()
 
-async def get_current_user_API(token: str = Depends(oauth2_scheme), session: Session = Depends(get_db)):
+async def get_current_user_API(token: str = Depends(oauth2_scheme), session: Session = Depends(get_db), raise_exception: bool = True):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Token does not exist or is no longer valid",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    key = get_keys_by_value(session, token)
+    
+    if token is None:
+        if raise_exception: 
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Not authenticated",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+    else:
+        key = get_keys_by_value(session, token)
     try:
         if isinstance(key,Keys) and key.valid:
-            if check_if_still_on_valid_time(key.valid_until) is False:
-                raise credentials_exception
-            else:
+            if check_if_still_on_valid_time(key.valid_until):
                 user = decode_and_verify(key.owner, session)
                 if isinstance(user, User):
                     return True #the user is authenticated
-    except Exception as e:
-        print(f"\n\n\n\n\nerror: {e}\n\n\n\n\n")
-        raise credentials_exception
+    except Exception :
+        traceback.print_exc()
+        
+    if raise_exception: 
+            raise credentials_exception
+    else:
+        return False
+    
+async def get_current_user_view(request:Request, session: Session = Depends(get_db), raise_exception: bool = True):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Token does not exist or is no longer valid",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    token = await oauth2_scheme(request)
+    
+    if token is None:
+        if raise_exception: 
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Not authenticated",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+    else:
+        key = get_keys_by_value(session, token)
+    try:
+        if isinstance(key,Keys) and key.valid:
+            if check_if_still_on_valid_time(key.valid_until):
+                user = decode_and_verify(key.owner, session)
+                if isinstance(user, User):
+                    return True #the user is authenticated
+    except Exception :
+        traceback.print_exc()
+        
+    if raise_exception: 
+            raise credentials_exception
+    else:
+        return False
      
 def decode_and_verify(secret: str, db: Session):
     try:
@@ -60,3 +104,10 @@ def check_if_still_on_valid_time(valid_until: str)->bool:
         return True
     else:
         return False
+
+def request_add_token(request: Request, token: str):
+    new_headers = MutableHeaders(request._headers)
+    new_headers["Authorization"] = f"Bearer {token}"
+    request._headers = new_headers
+    request.scope.update(headers=request.headers.raw)
+    return request
