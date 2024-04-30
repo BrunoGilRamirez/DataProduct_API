@@ -1,0 +1,235 @@
+/* Estilos comunes para todos los archivos HTML */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #ef7800;
+}
+
+.logo {
+    width: 100px;
+}
+
+.form-logo {
+    width: 100px;
+    margin: 0 auto;
+    display: block;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    margin-left: -20px;
+    margin-right: -20px;
+    margin-top: -20px;
+}
+
+/* Estilos específicos para cada archivo HTML */
+
+/* index.html */
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+    background-color: #fff;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table_div {
+    margin-top: 20px;
+}
+
+/* product_basic.html */
+.product-container {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.product-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.product-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.product-container th, .product-container td {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.product-container th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    text-align: left;
+}
+
+.product-image {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.product-image img {
+    max-width: 405px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.product-container a {
+    color: #ef7800;
+    text-decoration: none;
+}
+
+.product-container a:hover {
+    text-decoration: underline;
+}
+
+/* product.html */
+.specifications {
+    margin-top: 30px;
+}
+
+.specifications h2 {
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.spec-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.spec-table caption {
+    font-weight: bold;
+    font-size: 1.2em;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    background-color: #f2f2f2;
+    color: #000000;
+}
+
+.spec-table th, .spec-table td {
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+    text-align: left;
+}
+
+.spec-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+/* products_by_any.html */
+.product-list {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.product-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.product-list li {
+    margin-bottom: 20px;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #f2f2f2;
+}
+.product-list ul p {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.product {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+}
+.product img {
+    width: 100px;
+    height: 100px;
+    margin-right: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.product-info {
+    flex-grow: 1;
+}
+
+.product-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.product-description {
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.product-link a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+.product-package {
+    margin-top: 5px;
+    color: #777;
+}
+
+.content-module {
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 20px;
+    margin-top: -20px;
+    margin-left: -20px;
+    margin-right: -20px;
+    margin-bottom: 20px;
+}
