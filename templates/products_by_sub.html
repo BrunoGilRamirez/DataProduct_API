@@ -23,8 +23,8 @@
         </div>
     
         <ul>
-            {% for product in products %}
             <li>
+            {% for product in products %}
                 <div class="product">
                     <img src="{{ product.img }}" alt="{{ product.name }}">
                     <div class="product-info">
@@ -37,8 +37,8 @@
                         <div class="product-package">Número de elementos por paquete: {{ product.itms_val_in_pkg }}</div>
                     </div>
                 </div>
-            </li>
             {% endfor %}
+            </li>
         </ul>
     </div>
 </body>
