@@ -14,18 +14,18 @@ import os
 #---------------------General settings---------------------
 #this is to get the session from the .env file
 session = get_session('.env')
-list_endpoints = [("/products", "Get all products id"), 
-            ("/product_by_id/2674530000", "Get a product by its id"), 
-            ("/product_by_name/s2c 2.5", "Get a product by its name"), 
-            ("/products_by_root_category/conectividad", "Get all products by root category"), 
-            ("/products_by_main_category/sai-au universal%20pro%20m8 digital", "Get all products by main category"), 
-            ('/products_by_subcategories/?category=["sistemas de e/s", "i/o system ip67 - u-remote", "universal pro"]', "Get all products by subcategories"), 
-            ('/products_by_any_category/?category=["sistemas de e/s", "i/o system ip67 - u-remote", "universal pro"]&root_category=automatización y software&main_category=sai-au universal pro m8 digital', "Get all products by any category"), 
-            ("/categories", "Get all categories"), 
-            ("/specs_by_item_id/2674530000", "Get all specs by item id"),
-            ('/products_by_list_of_products/?ids=["0101700000","0103300000","0105100000","0105260000","0105620000","0105920000","0106020000","0107160000","0107260000","0110060000","0110080000"]', "Get all specs by list of products"),
-            ("/product_and_specs_by_id/2674530000", "Get a product and its specs by its id"),
-            ('/products_to_excel/?list_of_products=["0101700000","0103300000","0105100000","0105260000","0105620000","0105920000","0106020000","0107160000","0107260000","0110060000","0110080000"]&n=10&random=True', "Get an excel file with the products")
+list_endpoints = [ ("/products", "Obtener todos los productos", "/products", "Sin parámetros"), 
+            ("/product_by_id/2674530000", "Obtener producto por Código SAP o ID","/product_by_id/", "Cadena numérica de 10 dígitos"), 
+            ("/product_by_name/s2c 2.5", "Obtener producto por nombre","/product_by_name/", "Cadena de texto"), 
+            ("/products_by_root_category/conectividad", "Obtener productos por categoría Raíz","/products_by_root_category/", "Cadena de texto"), 
+            ("/products_by_main_category/sai-au universal%20pro%20m8 digital", "Obtener productos por categoría principal ","/products_by_main_category/", "Cadena de texto"), 
+            ('/products_by_subcategories/?category=["sistemas de e/s", "i/o system ip67 - u-remote", "universal pro"]', "Obtener productos por sub-categorías","/products_by_subcategories/", "Cadena de texto en forma de lista de sub-categorías separadas por coma [\"subcat1\", \"subcat2\", \"subcat3\"]"), 
+            ('/products_by_any_category/?category=["sistemas de e/s", "i/o system ip67 - u-remote", "universal pro"]&root_category=automatización y software&main_category=sai-au universal pro m8 digital', "Obtener productos por cualquier categoría","/products_by_any_category/", "Cadena de texto en forma de lista de sub-categorías separadas por coma [\"subcat1\", \"subcat2\", \"subcat3\"]"), 
+            ("/categories", "Obtener todas las categorías", "/categories", "Sin parámetros"), 
+            ("/specs_by_item_id/2674530000", "Obtener especificaciones por ID de producto", "/specs_by_item_id/", "Cadena numérica de 10 dígitos"),
+            ('/products_by_list_of_products/?ids=["0101700000","0103300000","0105100000","0105260000","0105620000","0105920000","0106020000","0107160000","0107260000","0110060000","0110080000"]', "Obtener productos y especificaciones por lista de productos", "/products_by_list_of_products/", "Cadena de texto en forma de lista de ID de productos separadas por coma [\"0000000000\", \"0000000001\", \"0000000002\"]"),
+            ("/product_and_specs_by_id/2674530000", "Obtener producto y especificaciones por ID de producto", "/product_and_specs_by_id/", "Cadena numérica de 10 dígitos"),
+            ('/products_to_excel/?list_of_products=["0101700000","0103300000","0105100000","0105260000","0105620000","0105920000","0106020000","0107160000","0107260000","0110060000","0110080000"]', "Obtener productos en formato Excel", "/products_to_excel/", "Cadena de texto en forma de lista de ID de productos separadas por coma [\"0000000000\", \"0000000001\", \"0000000002\"] y número entero"),
             ]
 
 #create a temp directory to store the excel files

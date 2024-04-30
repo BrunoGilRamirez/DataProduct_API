@@ -29,6 +29,11 @@ body {
     margin-right: -20px;
     margin-top: -20px;
 }
+.header div {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
 
 /* Estilos específicos para cada archivo HTML */
 
@@ -37,21 +42,48 @@ h1 {
     text-align: center;
     margin-bottom: 20px;
 }
+.table_div {
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+}
 
 table {
-    border-collapse: collapse;
     width: 100%;
     background-color: #fff;
     border-radius: 8px;
-    overflow: hidden;
+    border-collapse: collapse;
 }
 
-th, td {
+.table_div table tr {
+    border-bottom: 1px solid #d8d8d8;
+}
+
+td, th{
     text-align: left;
-    padding: 8px;
+    padding: 10px;
     background-color: #fff;
 }
 
+.endpoint{
+    text-align: center;
+}
+.impl {
+    text-align: center;
+}
+.implth {
+    text-align: center;
+    padding: 8px;
+    background-color: #f2f2f2;
+}
+.parametro {
+    text-align: left;
+    padding: 15px;
+    background-color: #fff;
+    max-width: 400px;
+    word-wrap: break-word;
+}
+    
 th {
     background-color: #f2f2f2;
 }
@@ -60,12 +92,22 @@ tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
-.table_div {
-    margin-top: 20px;
-}
 
 /* product_basic.html */
+.product-name {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    margin: -20px;
+}
 .product-container {
+    background-color: #fff;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     padding: 20px;
@@ -156,10 +198,18 @@ tr:nth-child(even) {
 }
 
 /* products_by_any.html */
+
+.list-product-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
 .product-list {
+    background-color: #fff;
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    align-items: center;
     border-radius: 8px;
 }
 
@@ -201,11 +251,6 @@ tr:nth-child(even) {
     flex-grow: 1;
 }
 
-.product-name {
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #333;
-}
 
 .product-description {
     margin-bottom: 5px;

@@ -5,69 +5,7 @@
         <title>API Endpoints</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" href="/static/icons/favicon.ico" type="image/x-icon">
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 20px;
-                background-color: #ef7800;
-            }
-
-            .logo {
-                width: 100px;
-            }
-
-            .form-logo {
-                width: 100px;
-                margin: 0 auto;
-                display: block;
-            }
-
-            .header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                background-color: #333;
-                color: #fff;
-                padding: 10px 20px;
-                margin-bottom: 20px;
-                margin-left: -20px;
-                margin-right: -20px;
-                margin-top: -20px;
-            }
-
-            h1 {
-                text-align: center;
-                margin-bottom: 20px;
-            }
-
-            table {
-                border-collapse: collapse;
-                width: 100%;
-                background-color: #fff;
-                border-radius: 8px; /* Nuevo */
-                overflow: hidden; /* Nuevo */
-            }
-
-            th, td {
-                text-align: left;
-                padding: 8px;
-                background-color: #fff;
-            }
-
-            th {
-                background-color: #f2f2f2;
-            }
-
-            tr:nth-child(even) {
-                background-color: #f2f2f2;
-            }
-
-            .table_div {
-                margin-top: 20px;
-            }
-        </style>
-    </head>
+        <link rel="stylesheet" href="/static/css/style.css">
     <body>
         <div class="header">
             <div>
@@ -79,16 +17,22 @@
             <table>
                 <tr>
                     <th>Endpoint</th>
-                    <th>Description</th>
-                    <th>Ejemplo de uso</th> <!-- New column -->
+                    <th>Descripción</th>
+                    <th>Parámetros</th>
+                    <th class="implth">Ejemplo de Implementación</th>
+                    <th class="implth">Ejemplo de uso</th> <!-- New column -->
                 </tr>
                 {% for endpoint in endpoints %}
                 <tr>
-                    <td><a href="{{ endpoint[0] }}">{{ endpoint[0] }}</a></td>
+                    <td>{{ endpoint[2] }}</td>
                     <td>{{ endpoint[1] }}</td>
+                    <td class="parametro">{{ endpoint[3] }}</td>
                     {% if endpoint[0] != "/categories" and endpoint[0] != "/specs_by_item_id/2674530000" and endpoint[0] != '/products_by_list_of_products/?ids=["0101700000","0103300000","0105100000","0105260000","0105620000","0105920000","0106020000","0107160000","0107260000","0110060000","0110080000"]' %}
-                        <td><a href="/view{{ endpoint[0] }}">Ver ejemplo</a></td>
+                        <td class="impl"><a href="/view{{ endpoint[0] }}">Ver ejemplo</a></td>
+                    {% else %}
+                        <td class="impl">-</td>
                     {% endif %}
+                    <td class="impl"><a href="{{ endpoint[0] }}"> Ver ejecución. </a></td>
                 </tr>
                 {% endfor %}
             </table>

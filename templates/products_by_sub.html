@@ -5,108 +5,7 @@
     <title>Lista de Productos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="/static/icons/favicon.ico" type="image/x-icon">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #ef7800;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #333;
-            color: #fff;
-            padding: 10px 20px;
-            margin-bottom: 20px;
-            margin-left: -20px;
-            margin-right: -20px;
-            margin-top: -20px;
-        }
-        .logo {
-            width: 100px;
-        }
-        .product-list {
-            background-color: #fff;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            align-items: center;
-            border-radius: 8px;
-        }
-        .product-list ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        .product-list li {
-            margin-bottom: 20px;
-            border-radius: 8px;
-            padding: 10px;
-            background-color: #f2f2f2;            
-        }
-        .product-list ul p {
-            font-weight: bold;
-            font-size: 1.2em;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .product {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            background-color: #fff;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 20px;
-        }
-
-        .product img {
-            width: 100px;
-            height: 100px;
-            margin-right: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .product-info {
-            flex-grow: 1;
-        }
-
-        .product-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #333;
-        }
-
-        .product-description {
-            margin-bottom: 5px;
-            color: #555;
-        }
-
-        .product-link a {
-            text-decoration: none;
-            color: #007bff;
-        }
-
-        .product-package {
-            margin-top: 5px;
-            color: #777;
-        }
-        .content-module {
-            background-color: #fff;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-            padding: 20px;
-            margin-top: -20px;
-            margin-left: -20px;
-            margin-right: -20px;
-            margin-bottom: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
     <div class="header">
@@ -129,7 +28,7 @@
                 <div class="product">
                     <img src="{{ product.img }}" alt="{{ product.name }}">
                     <div class="product-info">
-                        <div class="product-name">Nombre del producto: {{ product.name }}</div>
+                        <div class="list-product-name">Nombre del producto: {{ product.name }}</div>
                         <div class="product-description">Descripción del producto: {{ product.itm_description }}</div>
                         <div class="product-categories">Categorías: {{ product.path }}</div>
                         <div class="product-link">
