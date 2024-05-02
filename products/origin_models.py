@@ -10,9 +10,9 @@ Base = declarative_base()
 class TreeOfCategories_model(Base):
     __tablename__ = 'tree_of_categories'
     __table_args__ = (
-        PrimaryKeyConstraint('id', name='tree_of_cathegories_pkey'),
-        UniqueConstraint('all_categories', name='tree_of_cathegories_all_categories_key'),
-        UniqueConstraint('id', name='tree_of_cathegories_id_key')
+        PrimaryKeyConstraint('id', name='tree_of_categories_pkey'),
+        UniqueConstraint('all_categories', name='tree_of_categories_all_categories_key'),
+        UniqueConstraint('id', name='tree_of_categories_id_key')
     )
 
     id = mapped_column(Text)
