@@ -194,7 +194,7 @@ def select_specs_by_list_of_products( session: sessionmaker, products: list):
         if isinstance(product, Products):
             specs[product.item_id] = session.query(Specs).filter(Specs.item_id == product.item_id).all()
     return specs
-def select_all_collumns_join_products_and_specs( session: sessionmaker, list_of_products: list):
+def select_all_columns_join_products_and_specs( session: sessionmaker, list_of_products: list):
     '''This function returns a list of dictionaries with the specs of the products given as an argument.'''
     specs = []
     for product in list_of_products:

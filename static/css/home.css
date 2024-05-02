@@ -1,0 +1,35 @@
+.toggle-btn {
+    width: 102%;
+    padding: 10px;
+    margin-left: -10px;
+    margin-right: -10px;
+    margin-top: -10px;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    background-color: #ffffff;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.toggle-btn:hover {
+    color: #333;
+    background-color: #f2f2f6;
+}
+.json-container {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    background-color: #333;
+    color: #ef7800;
+    font-size: 14px;
+    max-height: 200px; /* Establece el límite de altura para la barra de desplazamiento */
+    overflow-y: auto; /* Añade una barra de desplazamiento vertical cuando sea necesario */
+}
+
+.json-container pre {
+    margin: 0; /* Elimina el margen predeterminado del elemento pre */
+}
