@@ -17,11 +17,11 @@ import os
 session = get_session('.env')
 list_endpoints = [ ("/products/?n=10", "Obtener todos los productos", "/products", "Opcional: número entero por ejemplo \"/?n=10\""), 
             ("/product_by_id/2674530000", "Obtener producto por Código SAP o ID","/product_by_id/", "Cadena numérica de 10 dígitos"), 
-            ("/product_by_name/s2c 2.5", "Obtener producto por nombre","/product_by_name/", "Cadena de texto"), 
-            ("/products_by_root_category/conectividad", "Obtener productos por categoría Raíz","/products_by_root_category/", "Cadena de texto"), 
-            ("/products_by_main_category/sai-au universal%20pro%20m8 digital", "Obtener productos por categoría principal ","/products_by_main_category/", "Cadena de texto"), 
-            ('/products_by_subcategories/?category=["sistemas de e/s", "i/o system ip67 - u-remote", "universal pro"]', "Obtener productos por sub-categorías","/products_by_subcategories/", "Cadena de texto en forma de lista de sub-categorías separadas por coma [\"subcat1\", \"subcat2\", \"subcat3\"]"), 
-            ('/products_by_any_category/?category=["sistemas de e/s", "i/o system ip67 - u-remote", "universal pro"]&root_category=automatización y software&main_category=sai-au universal pro m8 digital', "Obtener productos por cualquier categoría","/products_by_any_category/", "Cadena de texto en forma de lista de sub-categorías separadas por coma [\"subcat1\", \"subcat2\", \"subcat3\"]"), 
+            ("/product_by_name/?name=s2c 2.5&n=10", "Obtener producto por nombre","/product_by_name/", "Cadena de texto"), 
+            ("/products_by_root_category/?category=conectividad&n=10", "Obtener productos por categoría Raíz","/products_by_root_category/", "Cadena de texto"), 
+            ("/products_by_main_category/?category=sai-au universal%20pro%20m8 digital&n=10", "Obtener productos por categoría principal ","/products_by_main_category/", "Cadena de texto"), 
+            ('/products_by_subcategories/?subcategories=["sistemas de e/s", "i/o system ip67 - u-remote", "universal pro"]&n=10', "Obtener productos por sub-categorías","/products_by_subcategories/", "Cadena de texto en forma de lista de sub-categorías separadas por coma [\"subcat1\", \"subcat2\", \"subcat3\"]"), 
+            ('/products_by_any_category/?category=["sistemas de e/s", "i/o system ip67 - u-remote", "universal pro"]&root_category=automatización y software&main_category=sai-au universal pro m8 digital&n=10', "Obtener productos por cualquier categoría","/products_by_any_category/", "Cadena de texto en forma de lista de sub-categorías separadas por coma [\"subcat1\", \"subcat2\", \"subcat3\"]"), 
             ("/categories", "Obtener todas las categorías", "/categories", "Sin parámetros"), 
             ("/specs_by_item_id/2674530000", "Obtener especificaciones por ID de producto", "/specs_by_item_id/", "Cadena numérica de 10 dígitos"),
             ('/products_by_list_of_products/?ids=["0101700000","0103300000","0105100000","0105260000","0105620000","0105920000","0106020000","0107160000","0107260000","0110060000","0110080000"]', "Obtener productos y especificaciones por lista de productos", "/products_by_list_of_products/", "Cadena de texto en forma de lista de ID de productos separadas por coma [\"0000000000\", \"0000000001\", \"0000000002\"]"),
@@ -63,10 +63,7 @@ async def read_root(request: Request, db: Session = Depends(get_db)):
 async def read_products(request: Request,n:int=None, flag: bool = Depends(get_current_user_API)):
     #lets start counting the time it takes to open and close the session
     if flag:
-        if n is None:
-            products = select_products(session)
-        else:
-            products = select_n_products(session, n)
+        products = select_products(session, n)
         return products
 @wdm.get("/product_by_id/{product_id}") 
 async def read_products_by_id(request: Request,product_id: str, flag: bool = Depends(get_current_user_API)):
@@ -74,35 +71,39 @@ async def read_products_by_id(request: Request,product_id: str, flag: bool = Dep
         product = select_products_by_id(session, product_id)
 
         return product
-@wdm.get("/product_by_name/{product_name}")
-async def read_products_by_name(request: Request,product_name: str, flag: bool = Depends(get_current_user_API)):
+@wdm.get("/product_by_name/{name}")
+@wdm.get("/product_by_name/")
+async def read_products_by_name(request: Request,name: str,n:int=None, flag: bool = Depends(get_current_user_API)):
     if flag:
-        product = select_products_by_name(session, product_name)
+        product = select_products_by_name(session, name, n)
         return product
 @wdm.get("/products_by_root_category/{category}")
-async def read_products_by_root_category(request: Request,category: str, flag: bool = Depends(get_current_user_API)):
+@wdm.get("/products_by_root_category/")
+async def read_products_by_root_category(request: Request,category: str,n:int=None, flag: bool = Depends(get_current_user_API)):
     if flag:
-        product = select_products_by_root_category(session, category)
+        product = select_products_by_root_category(session, category, n)
         return product
 @wdm.get("/products_by_main_category/{category}")
-async def read_products_by_main_category(request: Request,category: str, flag: bool = Depends(get_current_user_API)):
+@wdm.get("/products_by_main_category/")
+async def read_products_by_main_category(request: Request,category: str, n:int=None,flag: bool = Depends(get_current_user_API)):
     if flag:
-        product = select_products_by_main_category(session, category)
+        product = select_products_by_main_category(session, category, n)
         return product
+@wdm.get("/products_by_subcategories/{subcategories}")
 @wdm.get("/products_by_subcategories/")
-async def read_products_by_subcategories(request: Request,category: str, flag: bool = Depends(get_current_user_API)):
+async def read_products_by_subcategories(request: Request,subcategories: str, n:int=None,flag: bool = Depends(get_current_user_API)):
     if flag:   
-        category=category.replace('/','+')
-        product = select_products_by_subcategories(session, category)
+        subcategories=subcategories.replace('/','+')
+        product = select_products_by_subcategories(session, subcategories, n)
         return product
 @wdm.get("/products_by_any_category/")
-async def read_products_by_any_category(request: Request,category: str='', main_category: str='', root_category: str='', flag: bool = Depends(get_current_user_API)):
+async def read_products_by_any_category(request: Request,n:int=None,category: str=None, main_category: str=None, root_category: str=None, flag: bool = Depends(get_current_user_API)):
     if flag:
         category=category.replace('/','+')
-        product = select_products_by_any_category(session, category, main_category, root_category)
+        product = select_products_by_any_category(session, n, category, main_category, root_category)
         return product
 
-# Categories endpoints
+# -----------------Categories endpoints-----------------
 @wdm.get("/categories")
 async def read_categories(request: Request,flag: bool = Depends(get_current_user_API)):
     if flag:
@@ -121,7 +122,8 @@ async def read_categories_by_main_category(request: Request,name: str, flag: boo
         selected_categories = select_categories_by_main_category(session, name)
         return selected_categories
 
-@wdm.get("/categories_by_subcategories/{root_category}")
+@wdm.get("/categories_by_subcategories/{subcategories}")
+@wdm.get("/categories_by_subcategories/")
 async def read_categories_by_subcategories(request: Request,root_category: str, subcategories: str, flag: bool = Depends(get_current_user_API)):
     if flag:
         selected_categories = select_categories_by_subcategories(session, root_category, subcategories)
@@ -187,7 +189,7 @@ async def read_products_to_excel(request: Request,list_of_products: str = None, 
             #sort the products by the list of products
             products = sorted(products, key=lambda x: list_of_products.index(x['item_id']))
         else:
-            products = select_n_products(session, n, random=random)
+            products = select_products(session, n, random=random)
         products = [dict(product) for product in products]
         df = pd.DataFrame.from_records(products)
         #gives a timestamp compatible with the file name format<
@@ -237,7 +239,7 @@ async def index(request: Request, db: Session = Depends(get_db)):
     request_add_token(request, token)
     flag= await get_current_user_view(request=request, session=db, raise_exception=False)
     if flag:
-        return temp.TemplateResponse("index.html", {"request": request, "endpoints": list_endpoints})
+        return temp.TemplateResponse("index.html", {"request": request, "endpoints": list_endpoints, "token": token})
     else:
         request.session.pop('api_token')
         return RedirectResponse(url='/view')
@@ -248,7 +250,7 @@ async def Products(request: Request, db: Session = Depends(get_db)):
     request_add_token(request, token)
     flag= await get_current_user_view(request=request, session=db, raise_exception=False)
     if flag:
-        products = select_n_products(session, 10, random=True)
+        products = select_products(session, 10, random=True)
         return temp.TemplateResponse("products.html", {"request": request, "products": products})
     else: 
         request.session.pop('api_token')
@@ -266,19 +268,21 @@ async def product_by_id(request: Request,product_id: str, db: Session = Depends(
         request.session.pop('api_token')
         return RedirectResponse(url='/view')
 
-@wdm.get("/view/product_by_name/{product_name}", response_class=HTMLResponse, include_in_schema=False)
-async def product_by_name(request: Request,product_name: str, db: Session = Depends(get_db)):
+@wdm.get("/view/product_by_name/{name}", response_class=HTMLResponse, include_in_schema=False)
+@wdm.get("/view/product_by_name/", response_class=HTMLResponse, include_in_schema=False)
+async def product_by_name(request: Request,name: str, db: Session = Depends(get_db)):
     token = request.session.get('api_token')
     request_add_token(request, token)
     flag= await get_current_user_view(request=request, session=db, raise_exception=False)
     if flag:
-        product = select_products_by_name(session, product_name)
-        return temp.TemplateResponse("products_by_name.html", {"request": request, "products": product, "name":product_name})
+        product = select_products_by_name(session, name)
+        return temp.TemplateResponse("products_by_name.html", {"request": request, "products": product, "name":name})
     else: 
         request.session.pop('api_token')
         return RedirectResponse(url='/view')
 
 @wdm.get("/view/products_by_root_category/{category}", response_class=HTMLResponse, include_in_schema=False)
+@wdm.get("/view/products_by_root_category/", response_class=HTMLResponse, include_in_schema=False)
 async def products_by_root_category(request: Request,category: str, db: Session = Depends(get_db)):
     token = request.session.get('api_token')
     request_add_token(request, token)
@@ -291,6 +295,7 @@ async def products_by_root_category(request: Request,category: str, db: Session 
         return RedirectResponse(url='/view')
 
 @wdm.get("/view/products_by_main_category/{category}", response_class=HTMLResponse, include_in_schema=False)
+@wdm.get("/view/products_by_main_category/", response_class=HTMLResponse, include_in_schema=False)
 async def products_by_main_category(request: Request,category: str, db: Session = Depends(get_db)):
     token = request.session.get('api_token')
     request_add_token(request, token)
@@ -301,23 +306,22 @@ async def products_by_main_category(request: Request,category: str, db: Session 
     else: 
         request.session.pop('api_token')
         return RedirectResponse(url='/view')
-
+@wdm.get("/view/products_by_subcategories/{subategories}", response_class=HTMLResponse, include_in_schema=False)
 @wdm.get("/view/products_by_subcategories/", response_class=HTMLResponse, include_in_schema=False)
-async def products_by_subcategories(request: Request,category: str = '', db: Session = Depends(get_db)):
+async def products_by_subcategories(request: Request, subcategories: str, db: Session = Depends(get_db)):
     token = request.session.get('api_token')
     request_add_token(request, token)
     flag= await get_current_user_view(request=request, session=db, raise_exception=False)
     if flag:
-        category = request.query_params.get('category')
-        category = category.replace('/', '+')
-        product = select_products_by_subcategories(session, category)
-        return temp.TemplateResponse("products_by_sub.html", {"request": request, "products": product, "sub": category})
+        subcategories = subcategories.replace('/', '+')
+        product = select_products_by_subcategories(session, subcategories)
+        return temp.TemplateResponse("products_by_sub.html", {"request": request, "products": product, "sub": subcategories})
     else: 
         request.session.pop('api_token')
         return RedirectResponse(url='/view')
 
 @wdm.get("/view/products_by_any_category/", response_class=HTMLResponse, include_in_schema=False)
-async def products_by_any_category(request: Request,category: str = '', main_category: str = '', root_category: str = '', db: Session = Depends(get_db)):
+async def products_by_any_category(request: Request, n:int=None,category: str = '', main_category: str = '', root_category: str = '', db: Session = Depends(get_db)):
     token = request.session.get('api_token')
     request_add_token(request, token)
     flag= await get_current_user_view(request=request, session=db, raise_exception=False)
@@ -326,7 +330,7 @@ async def products_by_any_category(request: Request,category: str = '', main_cat
         main_category = request.query_params.get('main_category')
         root_category = request.query_params.get('root_category')
         category = category.replace('/', '+')
-        product = select_products_by_any_category(session, category, main_category, root_category)
+        product = select_products_by_any_category(session, n, category, main_category, root_category)
         return temp.TemplateResponse("products_by_any.html", {"request": request, "products": product, "category": category, "main_category": main_category, "root_category": root_category})
     else: 
         request.session.pop('api_token')
