@@ -1,0 +1,51 @@
+.toggle-btn {
+    display: none;
+    width: 102%;
+    padding: 10px;
+    margin-left: -10px;
+    margin-right: -10px;
+    margin-top: -10px;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    background-color: #ffffff;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.toggle-btn:hover {
+    color: #333;
+    background-color: #f2f2f6;
+}
+.json-container {
+    flex-direction: row;
+    resize: none;
+    max-width: 98%;
+    width: 97%;
+    display: none;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    line-break:strict;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    background-color: #333;
+    color: #ef7800;
+    font-size: 14px;
+    overflow-y: auto; /* Añade una barra de desplazamiento vertical cuando sea necesario */
+}
+
+.json-container pre {
+    margin: 0; /* Elimina el margen predeterminado del elemento pre */
+}
+
+.hidden-row {
+    display: none;
+    align-items: center;
+}
+.hidden-row td {
+    padding-left: 10px;
+    border: 0;
+    align-content: center;
+}

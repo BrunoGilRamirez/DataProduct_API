@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <title>Lista de Productos</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="/static/icons/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="/static/css/style.css">
+    </head>
+    <body>
+        <div class="header">
+            <div>
+                <h1>Lista de Productos</h1>
+            </div>
+            <a href="/view"><img class="logo" src="/static/weidmueller_logo.svg" alt="Logo"></a>
+        </div>
+        <div class="product-list">
+            <div class="content-module">
+                <h2>Productos filtrados por:</h2>
+                <div class="filter-info">
+                    <strong>Productos con el nombre:</strong> {{name}} <br>
+                </div>
+            </div>
+            <ul>
+                <li>
+                    {% for product in products %}
+                        <div class="product">
+                            <img src="{{ product.img }}" alt="{{ product.name }}">
+                            <div class="product-list">
+                                <div class="list-product-name">Nombre del producto: {{ product.name }}</div>
+                                <div class="product-description"><strong>Descripción del producto:</strong> {{ product.itm_description }}</div>
+                                <div class="product-categories"><strong>Categorías:</strong> {{ product.path }}</div>
+                                <div class="product-link">
+                                    <a href="{{ product.datasheet_link }}">Datasheet</a>
+                                </div>
+                                <div class="product-package"><strong>Número de elementos por paquete:</strong> {{ product.itms_val_in_pkg }}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </li>
+            </ul>
+        </div>
+    </body>
+</html>

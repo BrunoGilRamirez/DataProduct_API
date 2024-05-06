@@ -4,12 +4,7 @@ from sqlalchemy.orm import sessionmaker, exc
 
 #------------------------------------------PRODUCTS------------------------------------------
 #________________SELECT Functions____________________
-def select_products( session: sessionmaker):
-    '''This function returns all the products in the database as a list of objects of the class Products.'''
-    #make a join with the categories table to get the main_category and root_category and subcategories
-    All_products = session.query(Products).all()
-    return All_products
-def select_n_products( session: sessionmaker, n: int, random: bool = False):
+def select_products( session: sessionmaker, n: int=None, random: bool = False):
     '''This function returns the first n products in the database as a list of objects of the class Products.'''
     #make a join with the categories table to get the main_category and root_category and subcategories
     if random:
@@ -17,7 +12,7 @@ def select_n_products( session: sessionmaker, n: int, random: bool = False):
     else:
         All_products = session.query(Products).limit(n).all()
     return All_products
-def select_products_by_any_category( session: sessionmaker, category: type [list | str] = '', main_category: str = '', root_category: str = '') -> dict:
+def select_products_by_any_category( session: sessionmaker, n: int=None, category: type [list | str] = '', main_category: str = '', root_category: str = '') -> dict:
     '''This function returns a dictionary with all the products in the database that belong to the any type of category given as an argument.
     If the category is a number, it will be used to filter the products by category_id.
     If the category is a string or a list of strings, it will be used to filter the products by subcategory.
@@ -29,19 +24,19 @@ def select_products_by_any_category( session: sessionmaker, category: type [list
     if isinstance(category, list):
         category = str(category).replace("'", '"')
     if category.isnumeric():
-        products = session.query(Products).filter(Products.category == category).all()
+        products = session.query(Products).filter(Products.category == category).limit(n).all()
     else:
         category = category.strip()
         category = category.lower()
         try:
-            aux=session.query(Products).join(Categories).filter(Categories.root_cat == category).all()
+            aux=session.query(Products).join(Categories).filter(Categories.root_cat == category).limit(n).all()
             if aux:
                 products['by root_category'] = aux
                 print('Obtained products by the root category', category)
         except exc.NoResultFound:
             pass
         try:
-            aux=session.query(Products).join(Categories).filter(Categories.main_category == category).all()
+            aux=session.query(Products).join(Categories).filter(Categories.main_category == category).limit(n).all()
             if aux:
                 products['by main_category'] = aux
                 print('Obtained products by the main category', category)
@@ -52,7 +47,7 @@ def select_products_by_any_category( session: sessionmaker, category: type [list
             root_category = root_category.strip()
             root_category = root_category.lower()
             try:
-                aux=session.query(Products).join(Categories).filter(Categories.root_cat == root_category).filter(Categories.subcategories.like(f'%{category}%')).all()
+                aux=session.query(Products).join(Categories).filter(Categories.root_cat == root_category).filter(Categories.subcategories.like(f'%{category}%')).limit(n).all()
                 if aux:
                     products['by_subcategories_and_root_category'] = aux
                     print('Obtained products by the root category', root_category)
@@ -63,7 +58,7 @@ def select_products_by_any_category( session: sessionmaker, category: type [list
             main_category = main_category.strip()
             main_category = main_category.lower()
             try:
-                aux=session.query(Products).join(Categories).filter(Categories.main_category == main_category).filter(Categories.subcategories.like(f'%{category}%')).all()
+                aux=session.query(Products).join(Categories).filter(Categories.main_category == main_category).filter(Categories.subcategories.like(f'%{category}%')).limit(n).all()
                 if aux:
                     products['by_subcategories_and_main_category'] = aux
                     print('Obtained products by the main category', main_category)
@@ -76,7 +71,7 @@ def select_products_by_any_category( session: sessionmaker, category: type [list
             root_category = root_category.strip()
             root_category = root_category.lower()
             try:
-                aux=session.query(Products).join(Categories).filter(Categories.main_category == main_category).filter(Categories.root_cat == root_category).filter(Categories.subcategories.like(f'%{category}%')).all()
+                aux=session.query(Products).join(Categories).filter(Categories.main_category == main_category).filter(Categories.root_cat == root_category).filter(Categories.subcategories.like(f'%{category}%')).limit(n).all()
                 if aux:
                     products['by_subcategories_and_main_and_root_category'] = aux
                     print('Obtained products by the main and root category', main_category, root_category)
@@ -124,11 +119,11 @@ def select_products_by_subcategories( session: sessionmaker, category: type [lis
     except exc.NoResultFound:
         print('No products found by that category', category)
     return products
-def select_products_by_name( session: sessionmaker, name: str):
+def select_products_by_name( session: sessionmaker,name: str, n: int=None):
     '''This function returns all the products in the database that have the name given as an argument.'''
     name = name.strip()
     name = name.lower()
-    products = session.query(Products).filter(Products.name.ilike(f'%{name}%')).all()
+    products = session.query(Products).filter(Products.name.ilike(f'%{name}%')).limit(n).all()
     return products
 def select_products_by_id( session: sessionmaker, id: str)-> type [Products | None]:
     '''This function returns the product in the database that has the id given as an argument.'''
@@ -194,7 +189,7 @@ def select_specs_by_list_of_products( session: sessionmaker, products: list):
         if isinstance(product, Products):
             specs[product.item_id] = session.query(Specs).filter(Specs.item_id == product.item_id).all()
     return specs
-def select_all_collumns_join_products_and_specs( session: sessionmaker, list_of_products: list):
+def select_all_columns_join_products_and_specs( session: sessionmaker, list_of_products: list):
     '''This function returns a list of dictionaries with the specs of the products given as an argument.'''
     specs = []
     for product in list_of_products:

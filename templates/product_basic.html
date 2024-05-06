@@ -1,19 +1,56 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Product Details</title>
-</head>
-<body>
-    <div>
-        <h1>{{ product.name }}</h1>
-        <p>Category: {{ product.category }}</p>
-        <p>ITMS Value in Package: {{ product.itms_val_in_pkg }}</p>
-        <p>Path: {{ product.path }}</p>
-        <p>Item Description: {{ product.itm_description }}</p>
-        <p>Item ID: {{ product.item_id }}</p>
-        <p><a href="{{ product.datasheet_link }}">Datasheet</a></p>
-        <img src="{{ product.img }}" alt="Product Image">
-    </div>
-    
-</body>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <title>Detalles del Producto</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="/static/icons/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="/static/css/style.css">
+    </head>
+    <body>
+        <div class="header">
+            <div>
+                <h1>Detalles del Producto </h1>
+            </div>
+            <a href="/view"><img class="logo" src="/static/weidmueller_logo.svg" alt="Logo"></a>
+        </div>
+        <div class="product-container">
+            <div class="product-name">
+                <h1>{{ product.name }}</h1>
+            </div>
+            <div class="product-image">
+                <img src="{{ product.img }}" alt="Product Image">
+            </div>
+            <table>
+                <tr>
+                    <th>Atributo</th>
+                    <th>Valor</th>
+                </tr>
+                <tr>
+                    <td>Número Categoría:</td>
+                    <td>{{ product.category }}</td>
+                </tr>
+                <tr>
+                    <td>Valor de elementos por Paquete:</td>
+                    <td>{{ product.itms_val_in_pkg }}</td>
+                </tr>
+                <tr>
+                    <td>Categorías:</td>
+                    <td>{{ product.path }}</td>
+                </tr>
+                <tr>
+                    <td>Descripción del Producto:</td>
+                    <td>{{ product.itm_description }}</td>
+                </tr>
+                <tr>
+                    <td> ID:</td>
+                    <td>{{ product.item_id }}</td>
+                </tr>
+                <tr>
+                    <td>Datasheet:</td>
+                    <td><a href="{{ product.datasheet_link }}">View Datasheet</a></td>
+                </tr>
+            </table>
+        </div>
+    </body>
 </html>
