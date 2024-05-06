@@ -30,7 +30,7 @@ def get_db():
     finally:
         db.close()
 
-async def get_current_user_API(token: str = Depends(oauth2_scheme), session: Session = Depends(get_db), raise_exception: bool = True):
+async def get_current_user_API(token: str = Depends(oauth2_scheme), session: Session = Depends(get_db), raise_exception: bool = True)->bool|HTTPException:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Token does not exist or is no longer valid",
@@ -44,7 +44,7 @@ async def get_current_user_API(token: str = Depends(oauth2_scheme), session: Ses
                 detail="Not authenticated",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-    else:
+    elif isinstance(token, str):
         key = get_keys_by_value(session, token)
     try:
         if isinstance(key,Keys) and key.valid:
@@ -60,7 +60,7 @@ async def get_current_user_API(token: str = Depends(oauth2_scheme), session: Ses
     else:
         return False
     
-async def get_current_user_view(request:Request, session: Session = Depends(get_db), raise_exception: bool = True):
+async def get_current_user_view(request:Request, session: Session = Depends(get_db), raise_exception: bool = True)->bool|HTTPException:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Token does not exist or is no longer valid",
@@ -75,7 +75,7 @@ async def get_current_user_view(request:Request, session: Session = Depends(get_
                 detail="Not authenticated",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-    else:
+    elif isinstance(token, str):
         key = get_keys_by_value(session, token)
     try:
         if isinstance(key,Keys) and key.valid:
@@ -91,7 +91,7 @@ async def get_current_user_view(request:Request, session: Session = Depends(get_
     else:
         return False
      
-def decode_and_verify(secret: str, db: Session):
+def decode_and_verify(secret: str, db: Session) -> User|bool:
     try:
         user= get_all_user_info(db, secret=secret)
         return user
@@ -105,7 +105,7 @@ def check_if_still_on_valid_time(valid_until: str)->bool:
     else:
         return False
 
-def request_add_token(request: Request, token: str):
+def request_add_token(request: Request, token: str)->Request:
     new_headers = MutableHeaders(request._headers)
     new_headers["Authorization"] = f"Bearer {token}"
     request._headers = new_headers
