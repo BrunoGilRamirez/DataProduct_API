@@ -21,7 +21,7 @@
     font-weight: bold;
 }
 
-.token-container input[type="text"],
+.token-container input[type="password"],
 .token-container input[type="submit"]{
     width: 100%;
     padding: 10px;
