@@ -1,6 +1,7 @@
 from SQL_Connectors import custom_connector, GCP_connector
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
+from fastapi import HTTPException, status
 import os
 
 def get_session(env: str='', db_name:str='DB_NAME',verbose=True, override=True, interpolate=True) -> sessionmaker|None:
@@ -17,5 +18,6 @@ def get_session(env: str='', db_name:str='DB_NAME',verbose=True, override=True, 
         print(f'Session created: {db_name}')
     except Exception as e:
         print(f'\n\nError creating session: {e}\n\n')
-        session = None
+        
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="The database is offline, for maintenance purposes.")
     return session

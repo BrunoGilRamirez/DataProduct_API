@@ -27,6 +27,8 @@ def get_db():
     db = session_root
     try:
         yield db #yield is used to create a generator function
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="The database is offline, for maintenance purposes.")
     finally:
         db.close()
 
