@@ -134,7 +134,7 @@ def select_products_by_id( session: sessionmaker, id: str)-> type [Products | No
     else:
         product = None
     return product
-def select_products_by_list_of_products( session: sessionmaker, products: list):
+def select_products_by_list_of_products( session: sessionmaker, products: list[str])-> list[Products]:
     '''This function returns a list of products given as an argument.'''
     products = session.query(Products).filter(Products.item_id.in_(products)).all()
     return products
@@ -189,6 +189,15 @@ def select_specs_by_list_of_products( session: sessionmaker, products: list):
         if isinstance(product, Products):
             specs[product.item_id] = session.query(Specs).filter(Specs.item_id == product.item_id).all()
     return specs
+def select_specs_by_list_of_ids( session: sessionmaker, ids: list):
+    """
+    """
+    specs = session.query(Specs).filter(Specs.item_id.in_(ids)).all()
+    ind_specs = {spec['item_id']:[] for spec in specs}
+    for spec in specs:
+        ind_specs[spec['item_id']].append(spec)
+    return ind_specs
+
 def select_all_columns_join_products_and_specs( session: sessionmaker, list_of_products: list):
     '''This function returns a list of dictionaries with the specs of the products given as an argument.'''
     specs = []

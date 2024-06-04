@@ -9,6 +9,7 @@ from session_management import get_session
 from fastapi.security import OAuth2PasswordBearer
 import traceback
 import os
+from sqlalchemy import exc
 
 #------------------------------------- cryptography -------------------------------------
 session_root = get_session('.env', 'DB_NAME_token')
@@ -27,12 +28,13 @@ def get_db():
     db = session_root
     try:
         yield db #yield is used to create a generator function
-    except Exception as e:
+    except exc.SQLAlchemyError:
+        traceback.print_exc()
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="The database is offline, for maintenance purposes.")
     finally:
         db.close()
 
-async def get_current_user_API(token: str = Depends(oauth2_scheme), session: Session = Depends(get_db), raise_exception: bool = True)->bool|HTTPException:
+async def get_current_user_API(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db), raise_exception: bool = True)->bool|HTTPException:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Token does not exist or is no longer valid",
@@ -47,11 +49,11 @@ async def get_current_user_API(token: str = Depends(oauth2_scheme), session: Ses
                 headers={"WWW-Authenticate": "Bearer"},
             )
     elif isinstance(token, str):
-        key = get_keys_by_value(session, token)
+        key = get_keys_by_value(db, token)
     try:
         if isinstance(key,Keys) and key.valid:
             if check_if_still_on_valid_time(key.valid_until):
-                user = decode_and_verify(key.owner, session)
+                user = decode_and_verify(key.owner, db)
                 if isinstance(user, User):
                     return True #the user is authenticated
     except Exception :
