@@ -56,9 +56,7 @@ async def get_current_user_API(token: str = Depends(oauth2_scheme), db: Session 
     try:
         if isinstance(key,Keys) and key.valid:
             if check_if_still_on_valid_time(key.valid_until):
-                user = decode_and_verify(key.owner, db)
-                if isinstance(user, User):
-                    return True #the user is authenticated
+                return True #the user is authenticated
     except Exception :
         traceback.print_exc()
         
@@ -87,9 +85,7 @@ async def get_current_user_view(request:Request, session: Session = Depends(get_
     try:
         if isinstance(key,Keys) and key.valid:
             if check_if_still_on_valid_time(key.valid_until):
-                user = decode_and_verify(key.owner, session)
-                if isinstance(user, User):
-                    return True #the user is authenticated
+                return True #the user is authenticated
     except Exception :
         traceback.print_exc()
         
