@@ -15,3 +15,4 @@ main.dev.py
 compose.dev.yaml
 compose.stage.yaml
 main_dev.py
+run.py

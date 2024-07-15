@@ -44,14 +44,7 @@ async def get_current_user_API(token: str = Depends(oauth2_scheme), db: Session 
         headers={"WWW-Authenticate": "Bearer"},
     )
     
-    if token is None:
-        if raise_exception: 
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Not authenticated",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-    elif isinstance(token, str):
+    if isinstance(token, str):
         key = get_keys_by_value(db, token)
     try:
         if isinstance(key,Keys) and key.valid:
