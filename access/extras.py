@@ -8,7 +8,7 @@ from starlette.datastructures import MutableHeaders
 from session_management import get_session
 from fastapi.security import OAuth2PasswordBearer
 import traceback
-import os
+import traceback, os, aiohttp, pg8000
 from sqlalchemy import exc
 
 #------------------------------------- cryptography -------------------------------------
@@ -25,15 +25,31 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="key",auto_error=False)
 
 #------------------------------------- database -------------------------------------
 def get_db():
+    """
+    Returns a database connection.
+
+    This function creates a database connection using the `session_root` function and returns it as a generator.
+    The connection is automatically closed when the generator is exhausted.
+
+    Yields:
+        - session: A database connection object.
+
+    """
     db = session_root
     try:
         yield db #yield is used to create a generator function
     except exc.SQLAlchemyError:
+        print("caught by get_db module")
         traceback.print_exc()
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="The database is offline, for maintenance purposes.")
-    except Exception:
+        raise HTTPException(status_code=status.HTTP_200_OK, detail="The database is offline, for maintenance purposes.")
+    except pg8000.exceptions.InterfaceError as e:
+        print("caught by get_db module")
         traceback.print_exc()
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="The database is offline, for maintenance purposes.")
+        raise HTTPException(status_code=status.HTTP_200_OK, detail="The database is offline, for maintenance purposes.")
+    except aiohttp.client_exceptions.ClientResponseError:
+        print("caught by get_db module")
+        traceback.print_exc()
+        raise HTTPException(status_code=status.HTTP_200_OK, detail="The database is offline, for maintenance purposes.")
     finally:
         db.close()
 

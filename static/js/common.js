@@ -16,16 +16,33 @@ function ejecutarEndpoint(endpointURL, containerId, toggleBtnId, trId, token) {
         mostrarJSON(cachedResults[endpointURL], containerId, toggleBtnId, trId);
     } else {
         fetch(endpointURL, requestOptions)
-            .then(response => response.json())
-            .then(result => {
-                // Almacenar los resultados en el objeto cachedResults
-                cachedResults[endpointURL] = result;
-                mostrarJSON(result, containerId, toggleBtnId, trId);
+            .then(response => {
+                // Verificar el tipo de contenido de la respuesta
+                const contentType = response.headers.get("content-type");
+                if (contentType.includes("application/json")) {
+                    return response.json().then(result => {
+                        // Almacenar los resultados en el objeto cachedResults
+                        cachedResults[endpointURL] = result;
+                        mostrarJSON(result, containerId, toggleBtnId, trId);
+                    });
+                } else if (contentType.includes("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+                    return response.blob().then(blob => {
+                        // Crear un enlace para descargar el archivo
+                        var downloadUrl = URL.createObjectURL(blob);
+                        var a = document.createElement("a");
+                        a.href = downloadUrl;
+                        a.download = "archivo.xlsx";  // Nombre del archivo a descargar
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    });
+                } else {
+                    throw new Error("Tipo de contenido no soportado: " + contentType);
+                }
             })
             .catch(error => console.log('error', error));
     }
 }
-
 
 function mostrarJSON(jsonData, containerId, toggleBtnId, trId) {
     var container = document.getElementById(containerId);
@@ -39,7 +56,6 @@ function mostrarJSON(jsonData, containerId, toggleBtnId, trId) {
         toggleBtn.style.display = 'inline-block';
     }
 }
-
 
 function toggleJSON(trId, toggleBtnId) {
     var tr = document.getElementById(trId);

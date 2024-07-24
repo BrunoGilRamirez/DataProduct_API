@@ -7,14 +7,38 @@
     <link rel="icon" href="/static/icons/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="/static/css/home.css">
+    <link rel="stylesheet" href="/static/css/search_bar.css">
 </head>
-<body>
+<body onload="render_endpoint_input()">
     <div class="header">
         <div>
             <h1>API Endpoints</h1>
         </div>
         <a href="/view"><img class="logo" src="/static/weidmueller_logo.svg" alt="Logo"></a>
     </div>
+    
+    <div class="searchbar-container">
+        <form action="/search">
+            <label for="endpoint">Endpoint:</label>
+            <select name="endpoint" id="endpoint" required>
+                {% for endpoint in endpoints %}
+                    <option value="{{ endpoint.base_url }}">{{ endpoint.base_url }}</option>
+                {% endfor %}
+            </select>
+            {% for endpoint in endpoints %}
+                <div class="endpoint-parameter" id="{{ endpoint.base_url }}">
+                    {% for param in endpoint.params %}
+                    <div class="parameter">
+                        <label for="{{param.name}}"></label>
+                        <input type="{{param.html_input_type}}" id="{{param.name}}" name="{{param.name}}" placeholder="{{param.name}}">
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <input type="submit" value="Buscar" onclick="excuteSearch()">
+        </form>
+    </div>
+
     <div class="table_div">
         <table>
             <tr>
@@ -26,28 +50,47 @@
             </tr>
             {% for endpoint in endpoints %}
             <tr>
-                <td>{{ endpoint[2] }}</td>
-                <td>{{ endpoint[1] }}</td>
-                <td class="parametro">{{ endpoint[3] }}</td>
-                {% if endpoint[0] != "/categories" and endpoint[0] != "/specs_by_item_id/2674530000" and endpoint[0] != '/products_by_list_of_products/?ids=["0101700000","0103300000","0105100000","0105260000","0105620000","0105920000","0106020000","0107160000","0107260000","0110060000","0110080000"]' %}
-                    <td class="impl"><a href="/view{{ endpoint[0] }}">Ver ejemplo</a></td>
+                <td>{{ endpoint.base_url }}</td>
+                <td>{{ endpoint.description }}</td>
+                <td class="parametro">{{ endpoint.params_description }}</td>
+                {% if endpoint.url != "/categories" and endpoint.url != "/specs_by_item_id/2674530000" and endpoint.url != '/products_by_list_of_products/?ids=["0101700000","0103300000","0105100000","0105260000","0105620000","0105920000","0106020000","0107160000","0107260000","0110060000","0110080000"]' %}
+                    <td class="impl"><a href="/view{{ endpoint.url }}">Ver ejemplo</a></td>
                 {% else %}
                     <td class="impl">-</td>
                 {% endif %}
-                <td class="impl"><a href="#" onclick="ejecutarEndpoint('{{ endpoint[0] }}', 'container_{{ loop.index }}', 'toggleBtn_{{ loop.index }}', 'tr_{{ loop.index }}', '{{token}}')"> Ver ejecución. </a></td>
+                <td class="impl"><a href="#" onclick="ejecutarEndpoint('{{ endpoint.url }}', 'container_{{ loop.index }}', 'toggleBtn_{{ loop.index }}', 'tr_{{ loop.index }}', '{{token}}')"> Ver ejecución. </a></td>
             </tr>
             <tr class="hidden-row" id="tr_{{ loop.index }}">
                 <td colspan="5">
                     <button id="toggleBtn_{{ loop.index }}" class="toggle-btn"  onclick="toggleJSON('tr_{{ loop.index }}', 'toggleBtn_{{ loop.index }}')">
                     <label for="container_{{ loop.index }}">Ocultar</label></button>
-                    <p><strong>  Consulta:</strong> {{ endpoint[0] }} <br> <strong>Resultado:</strong></p>
+                    <p><strong>  Consulta:</strong> {{ endpoint.url }} <br> <strong>Resultado:</strong></p>
                     <textarea readonly name="code" id="container_{{ loop.index }}" class="json-container" rows="10" ></textarea>
                 </td>
             </tr>
             {% endfor %}
         </table>
     </div>
-    <script src="/static/js/common.js"></script>
+    <script src="/static/js/common.js">
+        var active_endpoint= ''
+        function render_endpoint_input() {
+            var select = document.getElementById('endpoint');
+            var selected_endpoint = select.options[select.selectedIndex].value;
+            
+            // Ocultar todos los parámetros
+            endpoints.forEach(endpoint => {
+                var params_container = document.getElementById('params_' + endpoint.base_url.replace(/\//g, '_'));
+                params_container.style.display = 'none';
+            });
+
+            // Mostrar los parámetros del endpoint seleccionado
+            var active_params_container = document.getElementById('params_' + selected_endpoint.replace(/\//g, '_'));
+            if (active_params_container) {
+                active_params_container.style.display = 'block';
+            }
+        }
+
+    </script>
     
 </body>
 </html>

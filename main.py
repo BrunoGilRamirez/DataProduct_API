@@ -11,25 +11,29 @@ from access.schemas import *
 from access.crud import *
 from access.schemas import *
 from starlette.middleware.sessions import SessionMiddleware
-from pydantic import BaseModel as pydantic_model
 import os
 from extras import *
 #---------------------General settings---------------------
 #this is to get the session from the .env file
 session = get_session('.env')
-list_endpoints = [ ("/products/?n=10", "Obtener todos los productos", "/products", "Opcional: número entero por ejemplo \"/?n=10\""), 
-            ("/product_by_id/2674530000", "Obtener producto por Código SAP o ID","/product_by_id/", "Cadena numérica de 10 dígitos"), 
-            ("/product_by_name/?name=s2c 2.5&n=10", "Obtener producto por nombre","/product_by_name/", "Cadena de texto"), 
-            ("/products_by_root_category/?category=conectividad&n=10", "Obtener productos por categoría Raíz","/products_by_root_category/", "Cadena de texto"), 
-            ("/products_by_main_category/?category=sai-au universal%20pro%20m8 digital&n=10", "Obtener productos por categoría principal ","/products_by_main_category/", "Cadena de texto"), 
-            ('/products_by_subcategories/?subcategories=["sistemas de e/s", "i/o system ip67 - u-remote", "universal pro"]&n=10', "Obtener productos por sub-categorías","/products_by_subcategories/", "Cadena de texto en forma de lista de sub-categorías separadas por coma [\"subcat1\", \"subcat2\", \"subcat3\"]"), 
-            ('/products_by_any_category/?category=["sistemas de e/s", "i/o system ip67 - u-remote", "universal pro"]&root_category=automatización y software&main_category=sai-au universal pro m8 digital&n=10', "Obtener productos por cualquier categoría","/products_by_any_category/", "Cadena de texto en forma de lista de sub-categorías separadas por coma [\"subcat1\", \"subcat2\", \"subcat3\"]"), 
-            ("/categories", "Obtener todas las categorías", "/categories", "Sin parámetros"), 
-            ("/specs_by_item_id/2674530000", "Obtener especificaciones por ID de producto", "/specs_by_item_id/", "Cadena numérica de 10 dígitos"),
-            ('/products_by_list_of_products/?list_=["0101700000","0103300000","0105100000","0105260000","0105620000","0105920000","0106020000","0107160000","0107260000","0110060000","0110080000"]', "Obtener productos y especificaciones por lista de productos", "/products_by_list_of_products/", "Cadena de texto en forma de lista de ID de productos separadas por coma [\"0000000000\", \"0000000001\", \"0000000002\"]"),
-            ("/product_and_specs_by_id/2674530000", "Obtener producto y especificaciones por ID de producto", "/product_and_specs_by_id/", "Cadena numérica de 10 dígitos"),
-            ('/products_to_excel/?list_of_products=["0101700000","0103300000","0105100000","0105260000","0105620000","0105920000","0106020000","0107160000","0107260000","0110060000","0110080000"]', "Obtener productos en formato Excel", "/products_to_excel/", "Cadena de texto en forma de lista de ID de productos separadas por coma [\"0000000000\", \"0000000001\", \"0000000002\"] y número entero"),
-            ]
+# Aquí está la lista de endpoints con el formato proporcionado.
+list_endpoints = [
+    {"url": "/products/?n=10", "description": "Obtener todos los productos", "base_url": "/products", "params_description": "Opcional: número entero por ejemplo \"/?n=10\"", "params":[{"name":"n","html_input_type":"number"}]},
+    {"url": "/product_by_id/2674530000", "description": "Obtener producto por Código SAP o ID", "base_url": "/product_by_id/", "params_description": "Cadena numérica de 10 dígitos", "params":[{"name":"id","html_input_type":"text"}]},
+    {"url": "/product_by_name/?name=s2c 2.5&n=10", "description": "Obtener producto por nombre", "base_url": "/product_by_name/", "params_description": "Cadena de texto", "params":[{"name":"name","html_input_type":"text"},{"name":"n","html_input_type":"number"}]},
+    {"url": "/products_by_root_category/?category=conectividad&n=10", "description": "Obtener productos por categoría Raíz", "base_url": "/products_by_root_category/", "params_description": "Cadena de texto", "params":[{"name":"category","html_input_type":"text"},{"name":"n","html_input_type":"number"}]},
+    {"url": "/products_by_main_category/?category=sai-au universal%20pro%20m8 digital&n=10", "description": "Obtener productos por categoría principal", "base_url": "/products_by_main_category/", "params_description": "Cadena de texto", "params":[{"name":"category","html_input_type":"text"},{"name":"n","html_input_type":"number"}]},
+    {"url": '/products_by_subcategories/?subcategories=["sistemas de e/s", "i/o system ip67 - u-remote", "universal pro"]&n=10', "description": "Obtener productos por sub-categorías", "base_url": "/products_by_subcategories/", "params_description": 'Cadena de texto en forma de lista de sub-categorías separadas por coma ["subcat1", "subcat2", "subcat3"]', "params":[{"name":"subcategories","html_input_type":"text"},{"name":"n","html_input_type":"number"}]},
+    {"url": '/products_by_any_category/?category=["sistemas de e/s", "i/o system ip67 - u-remote", "universal pro"]&root_category=automatización y software&main_category=sai-au universal pro m8 digital&n=10', "description": "Obtener productos por cualquier categoría", "base_url": "/products_by_any_category/", "params_description": 'Cadena de texto en forma de lista de sub-categorías separadas por coma ["subcat1", "subcat2", "subcat3"]', "params":[{"name":"category","html_input_type":"text"},{"name":"root_category","html_input_type":"text"},{"name":"main_category","html_input_type":"text"},{"name":"n","html_input_type":"number"}]},
+    {"url": "/categories", "description": "Obtener todas las categorías", "base_url": "/categories", "params_description": "Sin parámetros", "params":[]},
+    {"url": "/specs_by_item_id/2674530000", "description": "Obtener especificaciones por ID de producto", "base_url": "/specs_by_item_id/", "params_description": "Cadena numérica de 10 dígitos", "params":[{"name":"id","html_input_type":"text"}]},
+    {"url": '/products_by_list_of_products/?list_=["0101700000","0103300000","0105100000","0105260000","0105620000","0105920000","0106020000","0107160000","0107260000","0110060000","0110080000"]', "description": "Obtener productos y especificaciones por lista de productos", "base_url": "/products_by_list_of_products/", "params_description": 'Cadena de texto en forma de lista de ID de productos separadas por coma ["0000000000", "0000000001", "0000000002"]', "params":[{"name":"list_","html_input_type":"text"}]},
+    {"url": "/product_and_specs_by_id/2674530000", "description": "Obtener producto y especificaciones por ID de producto", "base_url": "/product_and_specs_by_id/", "params_description": "Cadena numérica de 10 dígitos", "params":[{"name":"id","html_input_type":"text"}]},
+    {"url": '/products_to_excel/?list_of_products=["0101700000","0103300000","0105100000","0105260000","0105620000","0105920000","0106020000","0107160000","0107260000","0110060000","0110080000"]', "description": "Obtener productos en formato Excel", "base_url": "/products_to_excel/", "params_description": 'Cadena de texto en forma de lista de ID de productos separadas por coma ["0000000000", "0000000001", "0000000002"] y número entero', "params":[{"name":"list_of_products","html_input_type":"text"},{"name":"n","html_input_type":"number"}]}
+]
+
+list_endpoints
+
 
 #create a temp directory to store the excel files
 if not os.path.exists('temp'):
@@ -210,7 +214,7 @@ async def read_products_to_excel(request: Request,list_of_products: str = None, 
         timestamp = pd.Timestamp.now().strftime('%Y-%m-%d_%H-%M-%S')
         filename = f'products{timestamp}.xlsx'
         df.to_excel(("temp/"+filename), index=False)
-        return FileResponse(("temp/"+filename), filename=filename)
+        return FileResponse(f"temp/{filename}", filename=filename)
 @wdm.get("/products_with_specs_to_excel/")
 async def read_products_with_specs_to_excel(request: Request,list_of_products: str, flag: bool = Depends(get_current_user_API)):
     if flag:
@@ -224,7 +228,7 @@ async def read_products_with_specs_to_excel(request: Request,list_of_products: s
         timestamp = pd.Timestamp.now().strftime('%Y-%m-%d_%H-%M-%S')
         filename = f'products_with_specs{timestamp}.xlsx'
         df.to_excel(("temp/"+filename), index=False)
-        return FileResponse(("temp/"+filename), filename=filename)
+        return FileResponse(("temp/"+filename))
 
 #-----------------------view-----------------------
 @wdm.get("/view")
