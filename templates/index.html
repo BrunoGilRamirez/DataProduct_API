@@ -18,25 +18,31 @@
     </div>
     
     <div class="searchbar-container">
-        <form action="/search">
+        <form id="search-form" action="/search">
             <label for="endpoint">Endpoint:</label>
-            <select name="endpoint" id="endpoint" required>
+            <select name="endpoint" id="endpoint" required onchange="render_endpoint_input()">
                 {% for endpoint in endpoints %}
                     <option value="{{ endpoint.base_url }}">{{ endpoint.base_url }}</option>
                 {% endfor %}
             </select>
             {% for endpoint in endpoints %}
-                <div class="endpoint-parameter" id="{{ endpoint.base_url }}">
+                <div class="endpoint-parameter" id="params_{{ endpoint.base_url | replace('/', '_') }}">
+                    {% set outer_index = loop.index %}
                     {% for param in endpoint.params %}
-                    <div class="parameter">
-                        <label for="{{param.name}}"></label>
-                        <input type="{{param.html_input_type}}" id="{{param.name}}" name="{{param.name}}" placeholder="{{param.name}}">
+                    <div class="container_{{ param.name }}">
+                        <label for="{{ param.name }}">{{ param.label }}:</label>
+                        <input type="{{ param.html_input_type }}" id="{{ param.name ~ outer_index }}" name="{{ param.name }}" placeholder="{{ param.label }}" value="{{ param.default }}">
+                        <button type="button" class="clear-button" onclick="clearInput('{{ param.name }}')">×</button>
                     </div>
                     {% endfor %}
                 </div>
             {% endfor %}
-            <input type="submit" value="Buscar" onclick="excuteSearch()">
+            <button type="button" onclick="searchEndpoint('{{ token }}')">Buscar</button>
         </form>
+    </div>
+
+    <div  id="result-container">
+        <!-- Aquí se mostrarán los resultados -->
     </div>
 
     <div class="table_div">
@@ -46,33 +52,36 @@
                 <th>Descripción</th>
                 <th>Parámetros</th>
                 <th class="implth">Ejemplo de Implementación</th>
-                <th class="implth">Ejemplo de uso</th> <!-- New column -->
+                <th class="implth">Ejemplo de uso</th>
             </tr>
             {% for endpoint in endpoints %}
             <tr>
                 <td>{{ endpoint.base_url }}</td>
                 <td>{{ endpoint.description }}</td>
                 <td class="parametro">{{ endpoint.params_description }}</td>
-                {% if endpoint.url != "/categories" and endpoint.url != "/specs_by_item_id/2674530000" and endpoint.url != '/products_by_list_of_products/?ids=["0101700000","0103300000","0105100000","0105260000","0105620000","0105920000","0106020000","0107160000","0107260000","0110060000","0110080000"]' %}
+                {% if endpoint.url != "/categories" and endpoint.url != "/specs_by_item_id/2674530000" and endpoint.url != '/products_by_list_of_products/?list_=["0101700000","0103300000","0105100000","0105260000","0105620000","0105920000","0106020000","0107160000","0107260000","0110060000","0110080000"]' %}
                     <td class="impl"><a href="/view{{ endpoint.url }}">Ver ejemplo</a></td>
                 {% else %}
                     <td class="impl">-</td>
                 {% endif %}
-                <td class="impl"><a href="#" onclick="ejecutarEndpoint('{{ endpoint.url }}', 'container_{{ loop.index }}', 'toggleBtn_{{ loop.index }}', 'tr_{{ loop.index }}', '{{token}}')"> Ver ejecución. </a></td>
+                <td class="impl"><a href="#" onclick="ejecutarEndpoint('{{ endpoint.url }}', 'container_{{ loop.index }}', 'toggleBtn_{{ loop.index }}', 'tr_{{ loop.index }}', '{{ token }}')"> Ver ejecución. </a></td>
             </tr>
             <tr class="hidden-row" id="tr_{{ loop.index }}">
                 <td colspan="5">
-                    <button id="toggleBtn_{{ loop.index }}" class="toggle-btn"  onclick="toggleJSON('tr_{{ loop.index }}', 'toggleBtn_{{ loop.index }}')">
+                    <button id="toggleBtn_{{ loop.index }}" class="toggle-btn" onclick="toggleJSON('tr_{{ loop.index }}', 'toggleBtn_{{ loop.index }}')">
                     <label for="container_{{ loop.index }}">Ocultar</label></button>
-                    <p><strong>  Consulta:</strong> {{ endpoint.url }} <br> <strong>Resultado:</strong></p>
-                    <textarea readonly name="code" id="container_{{ loop.index }}" class="json-container" rows="10" ></textarea>
+                    <p><strong>Consulta:</strong> {{ endpoint.url }} <br> <strong>Resultado:</strong></p>
+                    <textarea readonly name="code" id="container_{{ loop.index }}" class="json-container" rows="10"></textarea>
                 </td>
             </tr>
             {% endfor %}
         </table>
     </div>
-    <script src="/static/js/common.js">
-        var active_endpoint= ''
+
+    <script src="/static/js/common.js"></script>
+    <script>
+        var endpoints = {{ endpoints | tojson }};
+
         function render_endpoint_input() {
             var select = document.getElementById('endpoint');
             var selected_endpoint = select.options[select.selectedIndex].value;
@@ -90,8 +99,26 @@
             }
         }
 
+        function searchEndpoint(token) {
+            var form = document.getElementById('search-form');
+            var formData = new FormData(form);
+            var action = form.getAttribute('action');
+
+            fetch(action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Authorization': "Bearer " + token
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Mostrar resultados en el contenedor
+                var resultContainer = document.getElementById('result-container');
+                resultContainer.innerHTML = '<pre>' + JSON.stringify(data, null, 4) + '</pre>';
+            })
+            .catch(error => console.error('Error:', error));
+        }
     </script>
-    
 </body>
 </html>
-

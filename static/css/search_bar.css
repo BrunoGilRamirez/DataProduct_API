@@ -1,18 +1,51 @@
-.searchbar-container{
+.searchbar-container {
     margin-top: 20px;
     border-radius: 8px;
     background-color: #fff;
     padding: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-.endpoint-parameter{
+.endpoint-parameter {
     display: none;
 }
-.endpoint-parameter input {
-    width: 100%;
-    padding: 10px;
+.endpoint-parameter .parameter {
+    position: relative;
     margin-bottom: 10px;
+}
+.parameter{
+    width: 400px;
+}
+.endpoint-parameter input{
+    width: 90%;
+    padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
+}
+
+.container_id{
+    min-width: 110px;
+    width: 70%;
+}
+.container_name{
+    min-width: 250px;
+    max-width: 50%;
+}
+.container_n{
+    min-width: 75px;
+    width: 20%;
+}
+
+.clear-button {
+    position: absolute;
+    top: 70%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #888;
+}
+.clear-button:hover {
+    color: #333;
 }
