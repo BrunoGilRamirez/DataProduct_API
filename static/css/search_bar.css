@@ -16,8 +16,10 @@
 }
 .searchbar-container form{
     margin: 15px;
-    display: inline-flex;
-    flex-wrap: wrap; 
+    display: flex;
+    flex-wrap: nowrap; 
+    align-items: center; /* Alinea los inputs verticalmente */
+    gap: 0; /* Elimina el espacio entre los inputs */
     width: 100%;
     min-width: 690px;
     height: 50px;
@@ -27,9 +29,11 @@
     margin-top: 0;
     margin-bottom: 0;
     padding: 0px;
+    padding-right: 10px;
+    padding-left: 10px;
     justify-content:center;
     text-align:center;
-    height: 90%;
+    height: 44.1px;
     text-align: center;
     border: 2px solid #ccc; 
     border-top-left-radius:  8px;
@@ -39,7 +43,7 @@
 .searchbar-container form select{
     display: inline-flex;
     margin-right: unset;
-    height: 97%;
+    height: 48.1px;
     width: 25%;
     max-width: 200px;
     min-width:unset;
@@ -62,8 +66,9 @@
     width:100%;
     max-width: 350px;
     min-width: 20px;
-    height: 49px;
-    margin-right: -20px;
+    margin-top: 1px;
+    height: 48.1px;
+    margin-right: -33px; /* Elimina la separación entre inputs */
     border: 2px solid #ccc; 
     border-radius: 0;
     box-sizing: border-box;
@@ -71,16 +76,18 @@
 
 .clear-button {
     display: inline-flex;
-    position:sticky;
-    margin-top: -20px;
-    margin-right: 10px;
-    transform: translateY(-50%);
+    margin-top: 0px;
+    margin-bottom:40px;
+    padding:0;
+    transform: translateY(50%);
     background-color: transparent;
-    border: none;
+    border: 0px solid #ccc;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 36px;
     color: #888;
 }
+
 
 .clear-button:hover {
     color: #333;
@@ -94,15 +101,16 @@
     justify-content: center;
     margin-left: unset;
     margin-top: unset;
-    height: auto;
+    height: 48.1px;
     align-items:center;
     text-align:center;
     width:100px;
-    border-radius:8px;
+    border-top-right-radius:  8px;
+    border-bottom-right-radius: 8px;
+    border: 2px #ccc;
     border-color:unset;
-    box-shadow:unset;
-    background-color:green;   
+    background-color:#287285;   
 }
 .search-button:hover{
-    background-color:aqua;
+    background-color:#2b7c90;
 }
