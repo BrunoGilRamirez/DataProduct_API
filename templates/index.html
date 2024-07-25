@@ -19,8 +19,9 @@
     
     <div class="searchbar-container">
         <form id="search-form" action="/search">
-            <label for="endpoint">Endpoint:</label>
-            <select name="endpoint" id="endpoint" required onchange="render_endpoint_input()">
+            <label for="endpoint"></label>
+            <div class="endpoint-title"><p>Endpoint</p></div>
+            <select aria-label="Select the endpoint" name="endpoint" id="endpoint" required onchange="render_endpoint_input()">
                 {% for endpoint in endpoints %}
                     <option value="{{ endpoint.base_url }}">{{ endpoint.base_url }}</option>
                 {% endfor %}
@@ -29,19 +30,17 @@
                 <div class="endpoint-parameter" id="params_{{ endpoint.base_url | replace('/', '_') }}">
                     {% set outer_index = loop.index %}
                     {% for param in endpoint.params %}
-                    <div class="container_{{ param.name }}">
-                        <label for="{{ param.name }}">{{ param.label }}:</label>
+                        <label for="{{ param.name }}"></label>
                         <input type="{{ param.html_input_type }}" id="{{ param.name ~ outer_index }}" name="{{ param.name }}" placeholder="{{ param.label }}" value="{{ param.default }}">
-                        <button type="button" class="clear-button" onclick="clearInput('{{ param.name }}')">×</button>
-                    </div>
+                        <button type="button" class="clear-button" onclick="clearInput('{{ param.name ~ outer_index }}')">×</button>
                     {% endfor %}
                 </div>
             {% endfor %}
-            <button type="button" onclick="searchEndpoint('{{ token }}')">Buscar</button>
+            <button class="search-button" type="button" onclick="searchEndpoint('{{ token }}')">Buscar</button>
         </form>
     </div>
 
-    <div  id="result-container">
+    <div id="result-container">
         <!-- Aquí se mostrarán los resultados -->
     </div>
 
@@ -95,7 +94,7 @@
             // Mostrar los parámetros del endpoint seleccionado
             var active_params_container = document.getElementById('params_' + selected_endpoint.replace(/\//g, '_'));
             if (active_params_container) {
-                active_params_container.style.display = 'block';
+                active_params_container.style.display = 'inline-flex';
             }
         }
 
@@ -118,6 +117,13 @@
                 resultContainer.innerHTML = '<pre>' + JSON.stringify(data, null, 4) + '</pre>';
             })
             .catch(error => console.error('Error:', error));
+        }
+
+        function clearInput(inputId) {
+            var input = document.getElementById(inputId);
+            if (input) {
+                input.value = '';
+            }
         }
     </script>
 </body>

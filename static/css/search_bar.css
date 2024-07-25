@@ -1,51 +1,108 @@
 .searchbar-container {
-    margin-top: 20px;
+    display: inline-flex;
     border-radius: 8px;
     background-color: #fff;
-    padding: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    flex-wrap: wrap;
+    width: 100%;
+    height: 80px;
+    min-width: 600px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-family: Arial, sans-serif;
 }
+.searchbar-container form{
+    margin: 15px;
+    display: inline-flex;
+    flex-wrap: wrap; 
+    width: 100%;
+    min-width: 690px;
+    height: 50px;
+}
+.endpoint-title {
+    display:inline-flex;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0px;
+    justify-content:center;
+    text-align:center;
+    height: 90%;
+    text-align: center;
+    border: 2px solid #ccc; 
+    border-top-left-radius:  8px;
+    border-bottom-left-radius: 8px;
+}
+
+.searchbar-container form select{
+    display: inline-flex;
+    margin-right: unset;
+    height: 97%;
+    width: 25%;
+    max-width: 200px;
+    min-width:unset;
+    border: 2px solid #ccc;
+    border-left: 1px;
+    border-right: 1px;
+}
+
 .endpoint-parameter {
     display: none;
+    max-width: 600px;
+    min-width:unset;
+    width: fit-content;
+    overflow: hidden;
+    height: 50px;
 }
-.endpoint-parameter .parameter {
-    position: relative;
-    margin-bottom: 10px;
-}
-.parameter{
-    width: 400px;
-}
-.endpoint-parameter input{
-    width: 90%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+
+
+.endpoint-parameter input {
+    width:100%;
+    max-width: 350px;
+    min-width: 20px;
+    height: 49px;
+    margin-right: -20px;
+    border: 2px solid #ccc; 
+    border-radius: 0;
     box-sizing: border-box;
 }
 
-.container_id{
-    min-width: 110px;
-    width: 70%;
-}
-.container_name{
-    min-width: 250px;
-    max-width: 50%;
-}
-.container_n{
-    min-width: 75px;
-    width: 20%;
-}
-
 .clear-button {
-    position: absolute;
-    top: 70%;
+    display: inline-flex;
+    position:sticky;
+    margin-top: -20px;
+    margin-right: 10px;
     transform: translateY(-50%);
-    background: none;
+    background-color: transparent;
     border: none;
     cursor: pointer;
     font-size: 16px;
     color: #888;
 }
+
 .clear-button:hover {
     color: #333;
+}
+
+
+
+
+.search-button{
+    display: inline-flex;
+    justify-content: center;
+    margin-left: unset;
+    margin-top: unset;
+    height: auto;
+    align-items:center;
+    text-align:center;
+    width:100px;
+    border-radius:8px;
+    border-color:unset;
+    box-shadow:unset;
+    background-color:green;   
+}
+.search-button:hover{
+    background-color:aqua;
 }
