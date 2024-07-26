@@ -31,9 +31,15 @@
                     {% set outer_index = loop.index %}
                     {% for param in endpoint.params %}
                         <label for="{{ param.name }}"></label>
-                        <input type="{{ param.html_input_type }}" id="{{ param.name ~ outer_index }}" name="{{ param.name }}" placeholder="{{ param.label }}" value="{{ param.default }}">
-                        <button type="button" class="clear-button" onclick="clearInput('{{ param.name ~ outer_index }}')">×</button>
+                        <input disabled type="search"  inputmode="{{ param.html_input_type }}" id="{{ param.name ~ outer_index }}" name="{{ param.name }}" placeholder="{{ param.label }}" value="{{ param.default }}">
                     {% endfor %}
+                    {% if endpoint.base_url == '/products_by_list_of_products/' %}
+                    <label for="with_specs"></label>
+                        <select disabled aria-label="¿Con especificaciones?" name="with_specs" id="with_specs">
+                            <option value="True">Sí</option>
+                            <option value="False">No</option>
+                        </select>
+                    {% endif %}
                 </div>
             {% endfor %}
             <button class="search-button" type="button" onclick="searchEndpoint('{{ token }}')">Buscar</button>
@@ -89,12 +95,35 @@
             endpoints.forEach(endpoint => {
                 var params_container = document.getElementById('params_' + endpoint.base_url.replace(/\//g, '_'));
                 params_container.style.display = 'none';
+                try{
+                     selects = params_container.getElementsByTagName('select');
+                     for (var i = 0; i < selects.length; i++) {
+                         selects[i].disabled = true;
+                     }
+                     inputs = params_container.getElementsByTagName('input');
+                     for (var i = 0; i < inputs.length; i++) {
+                         inputs[i].disabled = true;
+                     }
+                }catch(e){//nothing
+                    }
             });
 
             // Mostrar los parámetros del endpoint seleccionado
             var active_params_container = document.getElementById('params_' + selected_endpoint.replace(/\//g, '_'));
             if (active_params_container) {
                 active_params_container.style.display = 'inline-flex';
+                try{
+                    selects = active_params_container.getElementsByTagName('select');
+                     for (var i = 0; i < selects.length; i++) {
+                         selects[i].disabled = false;
+                     }
+                }
+                catch(e){//nothing
+                    }
+                inputs = active_params_container.getElementsByTagName('input');
+                for (var i = 0; i < inputs.length; i++) {
+                    inputs[i].disabled = false;
+                }
             }
         }
 
@@ -119,12 +148,6 @@
             .catch(error => console.error('Error:', error));
         }
 
-        function clearInput(inputId) {
-            var input = document.getElementById(inputId);
-            if (input) {
-                input.value = '';
-            }
-        }
     </script>
 </body>
 </html>

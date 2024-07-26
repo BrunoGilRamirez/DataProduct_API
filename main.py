@@ -18,18 +18,18 @@ from extras import *
 session = get_session('.env')
 # Aquí está la lista de endpoints con el formato proporcionado.
 list_endpoints = [
-    {"url": "/products/?n=10", "description": "Obtener todos los productos", "base_url": "/products", "params_description": "Opcional: número entero por ejemplo \"/?n=10\"", "params":[{"name":"n","html_input_type":"number", "label": "Limite de resultados", "default": "10"}]},
+    {"url": "/products/?n=10", "description": "Obtener todos los productos", "base_url": "/products", "params_description": "Opcional: número entero por ejemplo \"/?n=10\"", "params":[{"name":"n","html_input_type":"numeric", "label": "Limite de resultados", "default": "10"}]},
     {"url": "/product_by_id/2674530000", "description": "Obtener producto por Código SAP o ID", "base_url": "/product_by_id/", "params_description": "Cadena numérica de 10 dígitos", "params":[{"name":"id","html_input_type":"text", "label": "ID o código SAP", "default": "2674530000"}]},
-    {"url": "/product_by_name/?name=s2c 2.5&n=10", "description": "Obtener producto por nombre", "base_url": "/product_by_name/", "params_description": "Cadena de texto", "params":[{"name":"name","html_input_type":"text", "label": "Nombre del producto", "default": "s2c 2.5"},{"name":"n","html_input_type":"number", "label": "Limite de resultados", "default": "10"}]},
-    {"url": "/products_by_root_category/?category=conectividad&n=10", "description": "Obtener productos por categoría Raíz", "base_url": "/products_by_root_category/", "params_description": "Cadena de texto", "params":[{"name":"category","html_input_type":"text", "label": "Categoría raíz", "default": "conectividad"},{"name":"n","html_input_type":"number", "label": "Limite de resultados", "default": "10"}]},
-    {"url": "/products_by_main_category/?category=sai-au universal%20pro%20m8 digital&n=10", "description": "Obtener productos por categoría principal", "base_url": "/products_by_main_category/", "params_description": "Cadena de texto", "params":[{"name":"category","html_input_type":"text", "label": "Categoría principal", "default": "sai-au universal pro m8 digital"},{"name":"n","html_input_type":"number", "label": "Limite de resultados", "default": "10"}]},
-    {"url": '/products_by_subcategories/?subcategories=["sistemas de e/s", "i/o system ip67 - u-remote", "universal pro"]&n=10', "description": "Obtener productos por sub-categorías", "base_url": "/products_by_subcategories/", "params_description": 'Cadena de texto en forma de lista de sub-categorías separadas por coma ["subcat1", "subcat2", "subcat3"]', "params":[{"name":"subcategories","html_input_type":"text", "label": "Sub-categorías", "default": '["sistemas de e/s", "i/o system ip67 - u-remote", "universal pro"]'},{ "name":"n", "html_input_type": "number", "label": "Limite de resultados", "default": "10"}]},
-    {"url": '/products_by_any_category/?category=["sistemas de e/s", "i/o system ip67 - u-remote", "universal pro"]&root_category=automatización y software&main_category=sai-au universal pro m8 digital&n=10', "description": "Obtener productos por cualquier categoría", "base_url": "/products_by_any_category/", "params_description": 'Cadena de texto en forma de lista de sub-categorías separadas por coma ["subcat1", "subcat2", "subcat3"]', "params":[{"name":"category","html_input_type":"text", "label": "Categorías", "default": '["sistemas de e/s", "i/o system ip67 - u-remote", "universal pro"]'},{ "name":"root_category", "html_input_type": "text", "label": "Categoría raíz", "default": "automatización y software"},{ "name":"main_category", "html_input_type": "text", "label": "Categoría principal", "default": "sai-au universal pro m8 digital"},{ "name":"n", "html_input_type": "number", "label": "Limite de resultados", "default": "10"}]},
+    {"url": "/product_by_name/?name=s2c 2.5&n=10", "description": "Obtener producto por nombre", "base_url": "/product_by_name/", "params_description": "Cadena de texto", "params":[{"name":"name","html_input_type":"text", "label": "Nombre del producto", "default": "s2c 2.5"},{"name":"n","html_input_type":"numeric", "label": "Limite de resultados", "default": "10"}]},
+    {"url": "/products_by_root_category/?category=conectividad&n=10", "description": "Obtener productos por categoría Raíz", "base_url": "/products_by_root_category/", "params_description": "Cadena de texto", "params":[{"name":"category","html_input_type":"text", "label": "Categoría raíz", "default": "conectividad"},{"name":"n","html_input_type":"numeric", "label": "Limite de resultados", "default": "10"}]},
+    {"url": "/products_by_main_category/?category=sai-au universal%20pro%20m8 digital&n=10", "description": "Obtener productos por categoría principal", "base_url": "/products_by_main_category/", "params_description": "Cadena de texto", "params":[{"name":"category","html_input_type":"text", "label": "Categoría principal", "default": "sai-au universal pro m8 digital"},{"name":"n","html_input_type":"numeric", "label": "Limite de resultados", "default": "10"}]},
+    {"url": '/products_by_subcategories/?subcategories=["sistemas de e/s", "i/o system ip67 - u-remote", "universal pro"]&n=10', "description": "Obtener productos por sub-categorías", "base_url": "/products_by_subcategories/", "params_description": 'Cadena de texto en forma de lista de sub-categorías separadas por coma ["subcat1", "subcat2", "subcat3"]', "params":[{"name":"subcategories","html_input_type":"text", "label": "Sub-categorías", "default": '["sistemas de e/s", "i/o system ip67 - u-remote", "universal pro"]'},{ "name":"n", "html_input_type": "numeric", "label": "Limite de resultados", "default": "10"}]},
+    {"url": '/products_by_any_category/?category=["sistemas de e/s", "i/o system ip67 - u-remote", "universal pro"]&root_category=automatización y software&main_category=sai-au universal pro m8 digital&n=10', "description": "Obtener productos por cualquier categoría", "base_url": "/products_by_any_category/", "params_description": 'Cadena de texto en forma de lista de sub-categorías separadas por coma ["subcat1", "subcat2", "subcat3"]', "params":[{"name":"category","html_input_type":"text", "label": "Categorías", "default": '["sistemas de e/s", "i/o system ip67 - u-remote", "universal pro"]'},{ "name":"root_category", "html_input_type": "text", "label": "Categoría raíz", "default": "automatización y software"},{ "name":"main_category", "html_input_type": "text", "label": "Categoría principal", "default": "sai-au universal pro m8 digital"},{ "name":"n", "html_input_type": "numeric", "label": "Limite de resultados", "default": "10"}]},
     {"url": "/categories", "description": "Obtener todas las categorías", "base_url": "/categories", "params_description": "Sin parámetros", "params":[]},
     {"url": "/specs_by_item_id/2674530000", "description": "Obtener especificaciones por ID de producto", "base_url": "/specs_by_item_id/", "params_description": "Cadena numérica de 10 dígitos", "params":[{"name":"id","html_input_type":"text", "label": "ID del producto", "default": "2674530000"}]},
     {"url": '/products_by_list_of_products/?list_=["0101700000","0103300000","0105100000","0105260000","0105620000","0105920000","0106020000","0107160000","0107260000","0110060000","0110080000"]', "description": "Obtener productos y especificaciones por lista de productos", "base_url": "/products_by_list_of_products/", "params_description": 'Cadena de texto en forma de lista de ID de productos separadas por coma ["0000000000", "0000000001", "0000000002"]', "params":[{"name":"list_","html_input_type":"text", "label": "Lista de productos", "default": '["0101700000","0103300000","0105100000","0105260000","0105620000","0105920000","0106020000","0107160000","0107260000","0110060000","0110080000"]'}]},
     {"url": "/product_and_specs_by_id/2674530000", "description": "Obtener producto y especificaciones por ID de producto", "base_url": "/product_and_specs_by_id/", "params_description": "Cadena numérica de 10 dígitos", "params":[{"name":"id","html_input_type":"text", "label": "ID del producto", "default": "2674530000"}]},
-    {"url": '/products_to_excel/?list_of_products=["0101700000","0103300000","0105100000","0105260000","0105620000","0105920000","0106020000","0107160000","0107260000","0110060000","0110080000"]', "description": "Obtener productos en formato Excel", "base_url": "/products_to_excel/", "params_description": 'Cadena de texto en forma de lista de ID de productos separadas por coma ["0000000000", "0000000001", "0000000002"] y número entero', "params":[{"name":"list_of_products","html_input_type":"text", "label": "Lista de productos", "default": '["0101700000","0103300000","0105100000","0105260000","0105620000","0105920000","0106020000","0107160000","0107260000","0110060000","0110080000"]'},{ "name":"n", "html_input_type": "number", "label": "Limite de resultados", "default": "10"}]}
+    {"url": '/products_to_excel/?list_of_products=["0101700000","0103300000","0105100000","0105260000","0105620000","0105920000","0106020000","0107160000","0107260000","0110060000","0110080000"]', "description": "Obtener productos en formato Excel", "base_url": "/products_to_excel/", "params_description": 'Cadena de texto en forma de lista de ID de productos separadas por coma ["0000000000", "0000000001", "0000000002"] y número entero', "params":[{"name":"list_of_products","html_input_type":"text", "label": "Lista de productos", "default": '["0101700000","0103300000","0105100000","0105260000","0105620000","0105920000","0106020000","0107160000","0107260000","0110060000","0110080000"]'}]}
 ]
 
 
@@ -234,39 +234,60 @@ async def read_products_with_specs_to_excel(request: Request,list_of_products: s
 
 @wdm.post("/search")
 async def search(request: Request, flag: bool = Depends(get_current_user_API)):
+    #TODO: implement the file list manager to retrieve the info.
     if flag:
         form = await request.form()
+        print(form.items())
+        n= form.get('n') if form.get('n','').isdigit() else 10
+        sap_id = form.get('id') if form.get('id','').isdigit() else ''
+        name = form.get('name', '')
+        root_category = form.get('category', '')
+        main_category = form.get('category', '')
+        subcategories = form.get('subcategories', '')
+        category = form.get('category', '')
+        list_of_products = form.get('list_', '')
+        with_specs = bool(form.get('with_specs', False)=='True')
+
+        print(subcategories)
+
         if form.get("endpoint") == '/products':
-            n= form.get('n') or 10
-            products = select_products(session, n)
-            return products
+            return select_products(session, n)
         if form.get("endpoint") == '/product_by_id/':
-            sap_id = form.get('id1')
-            print(form.items())
-            product = select_products_by_id(session, sap_id)
-            print(product)
-            return product
+            return select_products_by_id(session, sap_id)
         if form.get("endpoint") == '/product_by_name/':
-            name = form.get('name')
-            n= form.get('n') or 10
-            products = select_products_by_name(session, name, n)
-            return products
+            return select_products_by_name(session, name, n)
         if form.get("endpoint") == '/products_by_root_category/':
-            pass
+            return select_products_by_root_category(session, root_category, n)
         if form.get("endpoint") == '/products_by_main_category/':
-            pass
+            return select_products_by_main_category(session, main_category, n)
         if form.get("endpoint") == '/products_by_subcategories/':
-            pass
+            subcategories=subcategories.replace('/','+')
+            return select_products_by_subcategories(session, subcategories, n)
         if form.get("endpoint") == '/products_by_any_category/':
-            pass
+            return select_products_by_any_category(session, n, category, main_category, root_category)
         if form.get("endpoint") == '/categories':
-            pass
+            return select_categories(session)
         if form.get("endpoint") == '/specs_by_item_id/':
-            pass
+            specs=select_specs_by_item_id(session, sap_id)
+            return specs
         if form.get("endpoint") == '/products_by_list_of_products/':
-            pass
+            ids=validate_ids(list_of_products)
+            products = []
+            if isinstance(ids, list):
+                for id in ids:
+                    product = select_products_by_id(session, id) # read the product by its id
+                    if with_specs and product is not None:  # if the product exists and we want the specs
+                        specs = select_specs_by_item_id(session, id)  # read the specs by the item id
+                        products.append({"product": product, "specs": specs})
+                    else:
+                        products.append({"product": product})
+                return products
         if form.get("endpoint") == '/product_and_specs_by_id/':
-            pass
+            product=select_products_by_id(session, sap_id)
+            specs=select_specs_by_item_id(session, sap_id)
+            product_and_specs = {"product":product, "specs":specs}
+            return product_and_specs
+
         if form.get("endpoint") == '/products_to_excel':
             pass
 
