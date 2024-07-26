@@ -119,7 +119,7 @@ def select_products_by_subcategories( session: sessionmaker, category: type [lis
     except exc.NoResultFound:
         print('No products found by that category', category)
     return products
-def select_products_by_name( session: sessionmaker,name: str, n: int=None):
+def select_products_by_name( session: sessionmaker,name: str, n: int=None) -> list[Products]:
     '''This function returns all the products in the database that have the name given as an argument.'''
     name = name.strip()
     name = name.lower()

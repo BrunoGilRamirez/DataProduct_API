@@ -11,8 +11,9 @@ from access.schemas import *
 from access.crud import *
 from access.schemas import *
 from starlette.middleware.sessions import SessionMiddleware
-import os
+import os, json
 from extras import *
+from products.models import *
 #---------------------General settings---------------------
 #this is to get the session from the .env file
 session = get_session('.env')
@@ -292,13 +293,62 @@ async def search(request: Request, flag: bool = Depends(get_current_user_API)):
             pass
 
 
-from typing import List, Optional
-class ListModel(BaseModel):
-    list_: Optional[List[str]] = None
+
+    
 @wdm.post("/search/file_entry")
-async def searchBy_file_entry(request: Request, data: ListModel, flag:bool=Depends(get_current_user_API)):
+async def searchBy_file_entry(request: Request, flag:bool=Depends(get_current_user_API)):
     if flag:
-        print(data)
+        form = await request.form()
+        list_ = form.get('list', '\{\}')
+        list_ = json.loads(list_)['list_']
+        col_name = form.get('column','').lower()
+        fileType = form.get('typefile','')
+        #check if all the values from the list are numeric strings
+        isnumeric = [True if lis_item.isnumeric() else False for lis_item in list_]
+        if all(isnumeric):
+            products = select_products_by_list_of_products(session, list_)
+            #sort the products by the list of products
+            products = sorted(products, key=lambda x: list_.index(x['item_id']))
+            products = [dict(product) for product in products]
+            df = pd.DataFrame.from_records(products)
+            #gives a timestamp compatible with the file name format<
+            timestamp = pd.Timestamp.now().strftime('%Y-%m-%d_%H-%M-%S')
+            filename = f'products_by{col_name}_{timestamp}{fileType}'
+            print(filename)
+            if fileType == '.csv':
+                df.to_csv(("temp/"+filename), index=False)
+            if fileType == '.xlsx':
+                df.to_excel(("temp/"+filename), index=False)	
+            if fileType == '.json':
+                df.to_json(("temp/"+filename), orient='records')
+            return FileResponse(f"temp/{filename}", filename=filename)
+        else:
+            products = []
+            for name in list_:
+                product = select_products_by_name(session, name)
+                
+                if len(product) > 0:
+                    product = [dict(product_) for product_ in product]
+                    products.extend(product)
+                else:
+                    products.append({'name':name, 'item_id':'No encontrado', 'category':'No encontrado', 'datasheet_link':'No encontrado', 'itms_val_in_pkg':'No encontrado', 'img':'No encontrado', 'path':'No encontrado', 'itm_description':'No encontrado'})
+            df = pd.DataFrame.from_records(products)
+            timestamp = pd.Timestamp.now().strftime('%Y-%m-%d_%H-%M-%S')
+            filename = f'products_by{col_name}_{timestamp}{fileType}'
+            print(filename)
+            if fileType == '.csv':
+                df.to_csv(("temp/"+filename), index=False)
+            if fileType == '.xlsx':
+                df.to_excel(("temp/"+filename), index=False)	
+            if fileType == '.json':
+                df.to_json(("temp/"+filename), orient='records')
+            return FileResponse(f"temp/{filename}", filename=filename)
+
+
+
+        
+            
+
 
 #-----------------------view-----------------------
 @wdm.get("/view")
@@ -337,7 +387,7 @@ async def index(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse(url='/view')
 
 @wdm.get("/view/products", response_class=HTMLResponse, include_in_schema=False)
-async def Products(request: Request, db: Session = Depends(get_db)):
+async def Products_v(request: Request, db: Session = Depends(get_db)):
     token = request.session.get('api_token')
     flag=False
     if token:

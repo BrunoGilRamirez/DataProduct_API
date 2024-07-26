@@ -124,3 +124,8 @@
     border-top-left-radius:8px;
     border-top-right-radius:8px;
 }
+
+#file-viewer-container {
+    display: none;
+    margin-top: 15px;
+}

@@ -46,15 +46,22 @@
         </form>
     </div>
 
-    <div class="file_configurator" id="column-selection-container" >
-
+    <div class="file_configurator" id="column-selection-container">
         <h3 onclick="toggleSearchBarResults('column-selection-container')">Selecciona una columna para la búsqueda</h3>
         <select id="column-select" aria-label="Selecciona una columna" onchange="displayColumnValues()">
             <!-- Las opciones de columna se añadirán aquí dinámicamente -->
         </select>
+        <select id="file-type-select" aria-label="Selecciona el tipo de archivo">
+            <option value=".json">JSON</option>
+            <option value=".csv">CSV</option>
+            <option value=".xlsx">Excel</option>
+        </select>
         <textarea aria-label="Valores de la columna" id="column-values" class="json-container" readonly></textarea>
         <button id="submit-column" type="button" style="display:none;" onclick="submitColumn('{{ token }}')">Enviar</button>
-        <textarea aria-label="Resultado" id="result_from_file" class="json-container" readonly></textarea>
+        <div id="file-viewer-container" style="display:none;">
+            <!-- El archivo descargado se visualizará aquí -->
+            <iframe id="file-viewer" style="width:100%; height:600px;" src="" frameborder="0"></iframe>
+        </div>
     </div>
 
     <div class="result-container" id="result-container">
