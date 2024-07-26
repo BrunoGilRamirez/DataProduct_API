@@ -100,3 +100,27 @@
 .search-button:hover{
     background-color:#2b7c90;
 }
+.result-container,
+.file_configurator{
+    display: none;
+    background-color:#ffffff;
+    border-radius: 8px;
+    padding: 10px;
+    margin:  0px 15px 2px 20px;
+    justify-items:center;
+    align-items: center;
+    overflow:hidden;
+    height:auto;
+    
+}
+.result-container h3,
+.file_configurator h3{
+    margin:-10px -10px 10px -10px;
+    padding: 20px  10px 0px 10px;
+    width: 100%;
+    text-align: center;
+    height: 35px;
+    background-color: #d8d8d8;
+    border-top-left-radius:8px;
+    border-top-right-radius:8px;
+}

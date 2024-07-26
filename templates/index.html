@@ -46,9 +46,22 @@
         </form>
     </div>
 
-    <div id="result-container">
-        <!-- Aquí se mostrarán los resultados -->
+    <div class="file_configurator" id="column-selection-container" >
+
+        <h3 onclick="toggleSearchBarResults('column-selection-container')">Selecciona una columna para la búsqueda</h3>
+        <select id="column-select" aria-label="Selecciona una columna" onchange="displayColumnValues()">
+            <!-- Las opciones de columna se añadirán aquí dinámicamente -->
+        </select>
+        <textarea aria-label="Valores de la columna" id="column-values" class="json-container" readonly></textarea>
+        <button id="submit-column" type="button" style="display:none;" onclick="submitColumn('{{ token }}')">Enviar</button>
+        <textarea aria-label="Resultado" id="result_from_file" class="json-container" readonly></textarea>
     </div>
+
+    <div class="result-container" id="result-container">
+        <h3 onclick="toggleSearchBarResults('result-container')">Los Resultado de tu Búsqueda</h3>
+        <textarea aria-label="Resultado" id="result" class="json-container" readonly></textarea>
+    </div>
+
     <div class="table_div">
         <table>
             <tr>
@@ -84,9 +97,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.16.9/dist/xlsx.full.min.js"></script>
+    <script src="/static/js/searchbar.js"></script>
     <script src="/static/js/common.js"></script>
     <script>
         var endpoints = {{ endpoints | tojson }};
+        var dataCache = [];
 
         function render_endpoint_input() {
             var select = document.getElementById('endpoint');
@@ -96,112 +111,47 @@
             endpoints.forEach(endpoint => {
                 var params_container = document.getElementById('params_' + endpoint.base_url.replace(/\//g, '_'));
                 params_container.style.display = 'none';
-                try{
-                    selects = params_container.getElementsByTagName('select');
+                try {
+                    var selects = params_container.getElementsByTagName('select');
                     for (var i = 0; i < selects.length; i++) {
                         selects[i].disabled = true;
                     }
-                    inputs = params_container.getElementsByTagName('input');
+                    var inputs = params_container.getElementsByTagName('input');
                     for (var i = 0; i < inputs.length; i++) {
                         inputs[i].disabled = true;
                     }
-                }catch(e){//nothing
-                    }
+                } catch(e) {
+                    // nothing
+                }
             });
 
             // Mostrar los parámetros del endpoint seleccionado
             var active_params_container = document.getElementById('params_' + selected_endpoint.replace(/\//g, '_'));
             if (active_params_container) {
                 active_params_container.style.display = 'inline-flex';
-                try{
-                    selects = active_params_container.getElementsByTagName('select');
+                try {
+                    var selects = active_params_container.getElementsByTagName('select');
                     for (var i = 0; i < selects.length; i++) {
                         selects[i].disabled = false;
                     }
+                } catch(e) {
+                    // nothing
                 }
-                catch(e){//nothing
-                    }
-                inputs = active_params_container.getElementsByTagName('input');
+                var inputs = active_params_container.getElementsByTagName('input');
                 for (var i = 0; i < inputs.length; i++) {
                     inputs[i].disabled = false;
                 }
             }
         }
 
-        function searchEndpoint(token) {
-            var form = document.getElementById('search-form');
-            var formData = new FormData(form);
-            var action = form.getAttribute('action');
-
-            fetch(action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Authorization': "Bearer " + token
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Mostrar resultados en el contenedor
-                var resultContainer = document.getElementById('result-container');
-                resultContainer.innerHTML = '<pre>' + JSON.stringify(data, null, 4) + '</pre>';
-            })
-            .catch(error => console.error('Error:', error));
-        }
-
-        function allowFileDrop(event) {
-            event.preventDefault();
-        }
-
-        function handleFileDrop(event) {
-            event.preventDefault();
-            var files = event.dataTransfer.files;
-            if (files.length > 0) {
-                var file = files[0];
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    var data = e.target.result;
-                    if (file.type === 'application/json') {
-                        processJson(data);
-                    } else if (file.type === 'text/csv') {
-                        processCsv(data);
-                    } else if (file.type.includes('spreadsheetml.sheet')) {
-                        processExcel(data);
-                    }
-                };
-                if (file.type === 'application/json' || file.type === 'text/csv') {
-                    reader.readAsText(file);
-                } else if (file.type.includes('spreadsheetml.sheet')) {
-                    reader.readAsBinaryString(file);
-                }
+        function toggleSearchBarResults(container_id){
+            var container = document.getElementById(container_id);
+            if (container.style.height==='auto') {
+                container.style.height = '30px';
+            } else {
+                container.style.height = 'auto';
             }
         }
-
-        function processJson(data) {
-            var jsonData = JSON.parse(data);
-            console.log('JSON Data:', jsonData);
-            // Aquí puedes procesar los datos JSON
-        }
-
-        function processCsv(data) {
-            Papa.parse(data, {
-                header: true,
-                complete: function(results) {
-                    console.log('CSV Data:', results.data);
-                    // Aquí puedes procesar los datos CSV
-                }
-            });
-        }
-
-        function processExcel(data) {
-            var workbook = XLSX.read(data, {type: 'binary'});
-            workbook.SheetNames.forEach(function(sheetName) {
-                var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
-                console.log('Excel Data:', XL_row_object);
-                // Aquí puedes procesar los datos de Excel
-            });
-        }
-
     </script>
 </body>
 </html>

@@ -232,7 +232,7 @@ async def read_products_with_specs_to_excel(request: Request,list_of_products: s
         df.to_excel(("temp/"+filename), index=False)
         return FileResponse(("temp/"+filename))
 
-@wdm.post("/search")
+@wdm.post("/search/")
 async def search(request: Request, flag: bool = Depends(get_current_user_API)):
     #TODO: implement the file list manager to retrieve the info.
     if flag:
@@ -290,6 +290,15 @@ async def search(request: Request, flag: bool = Depends(get_current_user_API)):
 
         if form.get("endpoint") == '/products_to_excel':
             pass
+
+
+from typing import List, Optional
+class ListModel(BaseModel):
+    list_: Optional[List[str]] = None
+@wdm.post("/search/file_entry")
+async def searchBy_file_entry(request: Request, data: ListModel, flag:bool=Depends(get_current_user_API)):
+    if flag:
+        print(data)
 
 #-----------------------view-----------------------
 @wdm.get("/view")

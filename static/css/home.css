@@ -35,6 +35,12 @@
     font-size: 14px;
     overflow-y: auto; /* Añade una barra de desplazamiento vertical cuando sea necesario */
 }
+.json-container[id="column-values"],
+.json-container[id="result"]{
+    height: 210px;
+    width:96%;
+
+}
 
 .json-container pre {
     margin: 0; /* Elimina el margen predeterminado del elemento pre */
