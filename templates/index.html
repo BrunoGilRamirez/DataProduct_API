@@ -17,7 +17,7 @@
         <a href="/view"><img class="logo" src="/static/weidmueller_logo.svg" alt="Logo"></a>
     </div>
     
-    <div class="searchbar-container">
+    <div class="searchbar-container" ondrop="handleFileDrop(event)" ondragover="allowFileDrop(event)">
         <form id="search-form" action="/search">
             <label for="endpoint"></label>
             <div class="endpoint-title"><p>Endpoint</p></div>
@@ -31,7 +31,7 @@
                     {% set outer_index = loop.index %}
                     {% for param in endpoint.params %}
                         <label for="{{ param.name }}"></label>
-                        <input disabled type="search"  inputmode="{{ param.html_input_type }}" id="{{ param.name ~ outer_index }}" name="{{ param.name }}" placeholder="{{ param.label }}" value="{{ param.default }}">
+                        <input disabled type="search" inputmode="{{ param.html_input_type }}" id="{{ param.name ~ outer_index }}" name="{{ param.name }}" placeholder="{{ param.label }}" value="{{ param.default }}">
                     {% endfor %}
                     {% if endpoint.base_url == '/products_by_list_of_products/' %}
                     <label for="with_specs"></label>
@@ -49,7 +49,6 @@
     <div id="result-container">
         <!-- Aquí se mostrarán los resultados -->
     </div>
-
     <div class="table_div">
         <table>
             <tr>
@@ -83,6 +82,8 @@
         </table>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.16.9/dist/xlsx.full.min.js"></script>
     <script src="/static/js/common.js"></script>
     <script>
         var endpoints = {{ endpoints | tojson }};
@@ -96,14 +97,14 @@
                 var params_container = document.getElementById('params_' + endpoint.base_url.replace(/\//g, '_'));
                 params_container.style.display = 'none';
                 try{
-                     selects = params_container.getElementsByTagName('select');
-                     for (var i = 0; i < selects.length; i++) {
-                         selects[i].disabled = true;
-                     }
-                     inputs = params_container.getElementsByTagName('input');
-                     for (var i = 0; i < inputs.length; i++) {
-                         inputs[i].disabled = true;
-                     }
+                    selects = params_container.getElementsByTagName('select');
+                    for (var i = 0; i < selects.length; i++) {
+                        selects[i].disabled = true;
+                    }
+                    inputs = params_container.getElementsByTagName('input');
+                    for (var i = 0; i < inputs.length; i++) {
+                        inputs[i].disabled = true;
+                    }
                 }catch(e){//nothing
                     }
             });
@@ -114,9 +115,9 @@
                 active_params_container.style.display = 'inline-flex';
                 try{
                     selects = active_params_container.getElementsByTagName('select');
-                     for (var i = 0; i < selects.length; i++) {
-                         selects[i].disabled = false;
-                     }
+                    for (var i = 0; i < selects.length; i++) {
+                        selects[i].disabled = false;
+                    }
                 }
                 catch(e){//nothing
                     }
@@ -146,6 +147,59 @@
                 resultContainer.innerHTML = '<pre>' + JSON.stringify(data, null, 4) + '</pre>';
             })
             .catch(error => console.error('Error:', error));
+        }
+
+        function allowFileDrop(event) {
+            event.preventDefault();
+        }
+
+        function handleFileDrop(event) {
+            event.preventDefault();
+            var files = event.dataTransfer.files;
+            if (files.length > 0) {
+                var file = files[0];
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var data = e.target.result;
+                    if (file.type === 'application/json') {
+                        processJson(data);
+                    } else if (file.type === 'text/csv') {
+                        processCsv(data);
+                    } else if (file.type.includes('spreadsheetml.sheet')) {
+                        processExcel(data);
+                    }
+                };
+                if (file.type === 'application/json' || file.type === 'text/csv') {
+                    reader.readAsText(file);
+                } else if (file.type.includes('spreadsheetml.sheet')) {
+                    reader.readAsBinaryString(file);
+                }
+            }
+        }
+
+        function processJson(data) {
+            var jsonData = JSON.parse(data);
+            console.log('JSON Data:', jsonData);
+            // Aquí puedes procesar los datos JSON
+        }
+
+        function processCsv(data) {
+            Papa.parse(data, {
+                header: true,
+                complete: function(results) {
+                    console.log('CSV Data:', results.data);
+                    // Aquí puedes procesar los datos CSV
+                }
+            });
+        }
+
+        function processExcel(data) {
+            var workbook = XLSX.read(data, {type: 'binary'});
+            workbook.SheetNames.forEach(function(sheetName) {
+                var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+                console.log('Excel Data:', XL_row_object);
+                // Aquí puedes procesar los datos de Excel
+            });
         }
 
     </script>
