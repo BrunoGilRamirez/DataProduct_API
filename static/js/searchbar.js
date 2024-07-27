@@ -162,7 +162,7 @@ function submitColumn(token) {
         // Optionally, create a download link
         var a = document.createElement('a');
         a.href = url;
-        a.download = 'result.' + fileType; // Set the file extension based on selected file type
+        a.download = 'result' + typefile; // Set the file extension based on selected file type
         a.click();
     })
     .catch(error => console.error('Error:', error));
