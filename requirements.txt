@@ -12,7 +12,7 @@ charset-normalizer==3.3.2
 click==8.1.7
 cloud-sql-python-connector==1.7.0
 colorama==0.4.6
-cryptography==42.0.5
+cryptography==43.0.1
 dnspython==2.6.1
 ecdsa==0.18.0
 email-validator==2.1.0.post1
