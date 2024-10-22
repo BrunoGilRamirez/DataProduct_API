@@ -1,8 +1,7 @@
-![Marca](https://github.com/BrunoGilRamirez/weidmuller_ProductDB_API/assets/106723899/0a3eeed8-49e4-49bd-b5d1-86b3731f5aee)
 
 ### API for Product Data Retrieval
 
-This API provides access to WeidMuller product data, focused on product distributors. Built with FastAPI and utilizing a PostgreSQL database, it offers a user-friendly interface for querying various product-related information.
+This API provides access to product data, focused on product distributors. Built with FastAPI and utilizing a PostgreSQL database, it offers a user-friendly interface for querying various product-related information.
 
 ## Starting the Server
 
